@@ -9,6 +9,47 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Lock 
 import codecs
 from konlpy.tag import Twitter
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+def logIn(code):
+    #19금 영화일 경우 login 처리를 한다.
+    USER = "<당신의 >"
+    PASS = "<당신의 비밀번호>"
+    print("PhantomJS 드라이버 실행")
+
+    driver = webdriver.PhantomJS()
+    #driver.get_screenshot_as_file("web.png")
+    driver.get('https://nid.naver.com/nidlogin.login')
+    driver.implicitly_wait(1)
+
+    e = driver.find_element_by_id("id")
+    e.clear()
+    e.send_keys(USER)
+
+    print("아이디 접근 완료")
+    e = driver.find_element_by_id("pw")
+    e.clear()
+    print("pass 접근 완료")
+    e.send_keys(PASS)
+    form = driver.find_element_by_css_selector("#frmNIDLogin > fieldset > input")
+    form.submit()
+    driver.save_screenshot("web.png")
+    try:
+        _url = ("https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + str(code))
+        #print("url : " , _url)
+        driver.get(_url)
+        html = driver.page_source  
+    except:
+        return
+    soup = bs4.BeautifulSoup(html,'html.parser')
+    director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
+    name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
+    rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
+    if(rateList == None):
+        rateList = "0.00"
+    return name + "|" + director + "|" + rateList
+
 
 def deleteTag(x):
     return re.sub("<[^>]*>", "", x)
@@ -31,6 +72,7 @@ def getMovieName(code):
     #print("여기까진 실행됨", code)
     try:
         _url = ("https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + str(code))
+        # + str(code)
         #print("url : " , _url)
         f = urllib.request.urlopen(_url)
         #print("여기까진 실행됨")
@@ -43,10 +85,15 @@ def getMovieName(code):
     director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
     name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
     rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
+    if(rateList == None):
+        rateList = "0.00"
+    #print(rateList)
+
+    if(name == ""):
+        logIn(code)
+    else:
+        return name + "|" + director + "|" + rateList
     
-    print(rateList)
-    #print(name + " | " + director)
-    return name + "|" + director + "|" + rateList 
 
 def getComments(code):
     def makeArgs(code, page):
@@ -107,7 +154,7 @@ def getComments(code):
             retList.append((url, cat, cont))
         page += 1
 
-    return retList
+    return retList 
   
 def fetch(i):
     outname = 'comments/%d.txt' % i
@@ -115,6 +162,7 @@ def fetch(i):
         if os.stat(outname).st_size > 0: return
     except:
         None
+
     rs = getComments(i)
     detail = getMovieName(i)
     #print(rs[0])        
@@ -136,7 +184,7 @@ def fetch(i):
             for word in malist:
                 if word[1] != "Josa" and word[1] != "Conjunction" and word[1] != "Punctuation":
                     word_dic.append(word[0])
-            print(word_dic)
+            #print(word_dic)
             f.write("'%s';\n" %word_dic)           
     f.close()
     time.sleep(1)

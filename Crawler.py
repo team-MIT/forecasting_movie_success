@@ -34,7 +34,7 @@ def logIn(code):
     e.send_keys(PASS)
     form = driver.find_element_by_css_selector("#frmNIDLogin > fieldset > input")
     form.submit()
-    driver.save_screenshot("web.png")
+    #driver.save_screenshot("web.png")
     try:
         _url = ("https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + str(code))
         #print("url : " , _url)

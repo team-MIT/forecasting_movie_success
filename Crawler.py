@@ -88,13 +88,14 @@ def getMovieName(code):
     if(rateList == None):
         rateList = "0.00"
     #print(rateList)
-
+    
+    #19금 영화일 경우
     if(name == ""):
+        #로그인 처리를 해준다
         logIn(code)
     else:
         return name + "|" + director + "|" + rateList
     
-
 def getComments(code):
     def makeArgs(code, page):
         params = {

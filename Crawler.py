@@ -10,12 +10,34 @@ from threading import Lock
 import codecs
 from konlpy.tag import Twitter
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 def logIn(code):
+    def innerHTML(s, sl=0):
+        ret = ''
+        for i in s.contents[sl:]:
+            if i is str:
+                ret += i.strip()
+            else:
+                ret += str(i)
+        return ret
+ 
+    def fText(s):
+        if len(s): return innerHTML(s[0]).strip()
+        return ''
+    def rText(s):
+        if len(s): return (innerHTML(s[0]).strip() + innerHTML(s[1]).strip() + innerHTML(s[2]).strip() + innerHTML(s[3]).strip())
+    def r2Text(s):
+        if not len(s): return
+        actor = ""
+        if len(s) :
+            for a in s:
+                cont = fText(a.select(".p_info a"))
+                cont = re.sub('<[^>]+>.+?', '', cont)
+                actor += str(cont + ",")
+        return actor
     #19금 영화일 경우 login 처리를 한다.
-    USER = "<당신의 >"
-    PASS = "<당신의 비밀번호>"
+    USER = "<INSERT YOUR ID>"
+    PASS = "<INSERT YOUR PASSWORD>"
     print("PhantomJS 드라이버 실행")
 
     driver = webdriver.PhantomJS()
@@ -36,7 +58,7 @@ def logIn(code):
     form.submit()
     #driver.save_screenshot("web.png")
     try:
-        _url = ("https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + str(code))
+        _url = ("https://movie.naver.com/movie/bi/mi/detail.nhn?code=" + str(code))
         #print("url : " , _url)
         driver.get(_url)
         html = driver.page_source  
@@ -46,9 +68,11 @@ def logIn(code):
     director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
     name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
     rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
+    aList = r2Text(soup.select("#content > div.article > div.section_group.section_group_frst > div.obj_section.noline > div > div.lst_people_area.height100 > ul > li"))
+    
     if(rateList == None):
         rateList = "0.00"
-    return name + "|" + director + "|" + rateList
+    return name + "|" + director + "|" + rateList + "|" + aList + "|"
 
 
 def deleteTag(x):
@@ -69,9 +93,18 @@ def getMovieName(code):
         return ''
     def rText(s):
         if len(s): return (innerHTML(s[0]).strip() + innerHTML(s[1]).strip() + innerHTML(s[2]).strip() + innerHTML(s[3]).strip())
+    def r2Text(s):
+        if not len(s): return
+        actor = ""
+        if len(s) :
+            for a in s:
+                cont = fText(a.select(".p_info a"))
+                cont = re.sub('<[^>]+>.+?', '', cont)
+                actor += str(cont + ",")
+        return actor
     #print("여기까진 실행됨", code)
     try:
-        _url = ("https://movie.naver.com/movie/bi/mi/basic.nhn?code=" + str(code))
+        _url = ("https://movie.naver.com/movie/bi/mi/detail.nhn?code=" + str(code))
         # + str(code)
         #print("url : " , _url)
         f = urllib.request.urlopen(_url)
@@ -82,19 +115,21 @@ def getMovieName(code):
     #print("여기도 실행댐")
     #bs4를 이용해서 각각의 css 선택자를 통해 데이터를 긁어온다
     soup = bs4.BeautifulSoup(re.sub("&#(?![0-9])", "", data),'html.parser')
+    
     director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
     name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
     rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
+    aList = r2Text(soup.select("#content > div.article > div.section_group.section_group_frst > div.obj_section.noline > div > div.lst_people_area.height100 > ul > li"))
+    
     if(rateList == None):
         rateList = "0.00"
-    #print(rateList)
     
     #19금 영화일 경우
     if(name == ""):
         #로그인 처리를 해준다
         logIn(code)
     else:
-        return name + "|" + director + "|" + rateList
+        return name + "|" + director + "|" + rateList + "|" + aList + "|"
     
 def getComments(code):
     def makeArgs(code, page):
@@ -178,7 +213,7 @@ def fetch(i):
     for idx, r in enumerate(rs):
         if idx:
             #각 사용자가 개인별로 부여한 평점
-            f.write("%s | " % (r[1]))
+            f.write("%s|" % (r[1]))
             #koNLpy의 twitter 형태소 분석기를 통해 명사만 뽑아낸다.
             malist = twitter.pos(r[2].replace("'", "''").replace("\\", "\\\\"),norm=True, stem=True)
             word_dic = []
@@ -186,7 +221,7 @@ def fetch(i):
                 if word[1] != "Josa" and word[1] != "Conjunction" and word[1] != "Punctuation":
                     word_dic.append(word[0])
             #print(word_dic)
-            f.write("'%s';\n" %word_dic)           
+            f.write("%s\n" %word_dic)           
     f.close()
     time.sleep(1)
  

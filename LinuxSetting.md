@@ -1,11 +1,17 @@
 # Linux Install List
 
 
+
+
 ## 1. 설치  전 리눅스 세팅
+
 
   - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
   - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정
   - hadoop계정 내에서 모든 설치를 진행할 예정
+
+
+
 
 
 ## 2. 프로그램 설치
@@ -38,8 +44,8 @@ export CLASSPATH="."
    
    - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
    
-  * SSH 인증키 등록
-    * hadoop 계정 접속
+  * SSH 인증키 등록(Master)
+    * hadoop 계정 접속
     * $ssh-keygen -t rsa
     * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
     * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
@@ -59,8 +65,19 @@ Could not open a connection to your authentication agent.
   
 ````
     
-    
-
+  * Slave서버의 권한 변경
+    * slave01/slave02의 hadoop 계정 접속
+    * master서버가 slave01/slave02의 .ssh에 접근할 수 있도록 권한 설정
+    * chmod 755 ~/.ssh
+  
+  * master -> slave01/slave02 ( 인증키  복사 ) 
+    * master 접속
+    * $ cd ~/.ssh/
+    * $ scp ./authorized_keys hadoop@slave01:~/.ssh/  ( 인증키 복사 )
+    * $ scp ./authorized_keys hadoop@slave01:~/.ssh/
+    * $ ssh hadoop@master date
+    * $ ssh hadoop@slave01 date
+    * $ ssh hadoop@slave02 date ( 다른 컴퓨터들과 연결하는 작업이다. )
    
    
    - Nadenode : Master서버 / Datanode : Slave서버 설치
@@ -75,7 +92,6 @@ Could not open a connection to your authentication agent.
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
 
 ````javascript
-
 
 <configuration>
         <property>
@@ -111,7 +127,6 @@ Could not open a connection to your authentication agent.
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
 ````javascript
 
-
 <configuration>
         <property>
                 <name>dfs.replication</name>
@@ -137,14 +152,13 @@ Could not open a connection to your authentication agent.
 
 ````
 
-
-
 ***
 
 #### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
 ##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 
 
 ````javascript
+
 <configuration>          
 
      <!--Yarn Scheduler를 위한 NodeManager , ResourceManager 설정  -->
@@ -194,6 +208,7 @@ Could not open a connection to your authentication agent.
 #####로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
 
 ````javascript
+
 <configuration>
         <property>
                 <name>hadoop.tmp.dir</name>
@@ -208,12 +223,15 @@ Could not open a connection to your authentication agent.
 
 ````
 
+
+
 ***
 
 #### < 맵리듀스에서 사용할 환경정보 설정 : /home/hadoop/hadoop/etc/hadoop/mapred-site.xml >
 
 
 ````javascript
+
 <configuration>
         <property>
                 <name>mapreduce.framework.name</name>
@@ -225,6 +243,7 @@ Could not open a connection to your authentication agent.
                 <description>Host and Port for Job History Server(default 0.0.0.0:10020) </description>
         </property>
 </configuration>
+
 ````
 
 

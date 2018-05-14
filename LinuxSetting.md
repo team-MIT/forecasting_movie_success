@@ -53,6 +53,8 @@ export CLASSPATH="."
  - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
  - $ hdfs dfsadmin -safemode leave 명령어를 통해 안전모드를 제거하자 ( 강제종료 및 비정상 종료 시 하둡이 자동으로 안전모드로 돌입 
  - hdfs명령은 환경변수 설정을 해주거나 ./hadoop/bin/hdfs를 이용하여 실행하자. 또, hadoop패키지 이름이 길기 때문에 $ ln명령을 사용하여 링크걸어주자 )
+ 
+ - ##### - https://www.popit.kr/what-is-hadoop-yarn/  를 통해 yarn의 역할에 대한 이해도를 높혀보자
    
      
 #### (0) .bashrc 환경변수 설정
@@ -219,6 +221,7 @@ Could not open a connection to your authentication agent.
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
 ##### - default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문.
+
 
 ````javascript
 

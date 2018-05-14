@@ -338,7 +338,7 @@ slave02
 
 ***
 
-###  3) Spark-2.3.0
+### 3) Spark-2.3.0
 
 - 모든 서버에 spark  설치
  - spark를 사용하는 이유는 in-memory 특징으로 인해 hive나 hadoop보다 빠른 장점이 있으며, Mapreduce의 복잡한 코드를 짧게 줄일 수 있다.

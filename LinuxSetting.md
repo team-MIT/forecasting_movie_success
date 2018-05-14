@@ -39,7 +39,8 @@ export CLASSPATH="."
    - Nadenode : Master서버 / Datanode : Slave서버 설치
    
    
-### /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml   
+### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+##### /home/hadoop/hadoop-2.7.3/hdfs/namenode2은 mkdir
 ````javascript
 
 
@@ -67,3 +68,46 @@ export CLASSPATH="."
 </configuration>
 
 ````
+
+### < Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+````javascript
+
+
+<configuration>
+        <property>
+                <name>dfs.replication</name>
+                <value>2</value>
+        </property>
+        <property>
+                <name>dfs.permissions</name>
+                <value>false</value>
+        </property>
+        <property>
+                <name>dfs.permissions.enabled</name>
+                <value>false</value>
+        </property>
+        <property>
+                <name>dfs.permissions.superusergroup</name>
+                <value>supergroup</value>
+        </property>
+        <property>
+                <name>dfs.datanode.data.dir</name>
+                <value>/home/hadoop/hadoop-2.7.3/hdfs/datanode2</value>
+        </property>
+</configuration>
+
+````
+
+
+### 2. 프로그램 설치
+
+#####  1) JDK_1.8.0_171 설치
+  
+  - Hadoop/Spark 등 우리가 빅데이터를 다루기 위해 가장 기본적으로 필요한 것이 JAVA이다. jar파일을 이용해야 하기 때문이다.
+  
+  - 모든 Linux서버에 Java설치를 한다.( 하둡의 클러스터링으로 인해 모든 서버에 Java가 필요하다 )
+ 
+  - JDK 설치 경로 : /home/hadoop
+     
+  - 환경변수 설정 : /home/hadoop/.bashrc 
+

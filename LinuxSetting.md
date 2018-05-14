@@ -329,13 +329,63 @@ slave01
 slave02
 ````
 
-#####  2) JDK_1.8.0_171 설치
-  
-  - Hadoop/Spark 등 우리가 빅데이터를 다루기 위해 가장 기본적으로 필요한 것이 JAVA이다. jar파일을 이용해야 하기 때문이다.
-  
-  - 모든 Linux서버에 Java설치를 한다.( 하둡의 클러스터링으로 인해 모든 서버에 Java가 필요하다 )
- 
-  - JDK 설치 경로 : /home/hadoop
-     
-  - 환경변수 설정 : /home/hadoop/.bashrc 
+#### (9) 하둡을 시작하기 전 작업
+- $ hdfs namenode -format
+ - $ start-all.sh  ( 이 명령을 실행했을 때 비밀번호 입력이 없다면, ssh적용이 잘 된 것 )
+ - $ jps 명령을 통해 Namenode와 Datanode가 Master / Slave01,02에 잘 분배되어졌는지 확인할 것
+
+
+
+
+
+###  3) Spark-2.3.0
+
+- 모든 서버에 spark  설치
+ - spark를 사용하는 이유는 in-memory 특징으로 인해 hive나 hadoop보다 빠른 장점이 있으며, Mapreduce의 복잡한 코드를 짧게 줄일 수 있다.
+ - 스파크의 주요 데이터 추상화 객체(DataFrame)이 RDD로 변환하는 데 있어서 편리하다.
+ - Python을 사용할 수 있는 장점이 있다.
+
+#### (0) spark 설치
+- http://spark.apache.org/downloads.html
+
+```javascript
+$ tar -zxf spark-버전-bin-hadoop2.6.tgz
+$ sudo mkdir -p /home/hadoop/spark
+$ ln -s /home/hadoop/spark/ spark-1.6.0-bin-hadoop2.6 ( 심볼릭 링크 걸기 )
+$ cp ~/spark/conf/log4j.properties.template ~/spark/conf/log4j.properties
+$ vi ~/spark/conf/log4j.properties
+  =>  INFO를 ERROR로 바꾸어주면 INFO정보는 나오지 않는다.
+````
+
+#### (1) spark-env.sh 수정
+
+##### /home/hadoop/spark/conf/spark-env.sh
+##### spark-env.sh.template를 spark-env.sh로 복사 후 아래 코드로 
+
+````javascript
+export SPARK_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.38-bin.jar"
+export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
+export JAVA_HOME=/home/hadoop/jdk1.8.0_171
+export SPARK_HOME=/home/hadoop/spark-2.3.0-bin-hadoop2.7
+````
+
+
+#### (3) spark-defaults.conf 수정
+
+##### /home/hadoop/spark/conf/spark-defaults.conf
+
+````javascript
+spark.master                      yarn
+spark.eventLog.enabled            true
+spark.eventLog.dir                hdfs://master:9000/spark-log
+spark.history.provider            org.apache.spark.deploy.history.FsHistoryProvider
+spark.history.fs.logDirectory     hdfs://master:9000/spark-log
+spark.history.fs.update.interval  10s
+spark.history.ui.port             18080
+````
+
+
+####
+
 

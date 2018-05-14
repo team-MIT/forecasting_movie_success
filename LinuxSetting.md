@@ -115,7 +115,7 @@ Could not open a connection to your authentication agent.
 
 
 
-***
+
 
 
 
@@ -132,7 +132,7 @@ Could not open a connection to your authentication agent.
 
 
    
-***   
+   
 
 
 
@@ -173,7 +173,7 @@ Could not open a connection to your authentication agent.
 
 
 
-***
+
 
 
 
@@ -211,7 +211,7 @@ Could not open a connection to your authentication agent.
 
 
 
-***
+
 
 
 
@@ -266,7 +266,7 @@ Could not open a connection to your authentication agent.
 
 
 
-***
+
 
 
 
@@ -293,7 +293,7 @@ Could not open a connection to your authentication agent.
 
 
 
-***
+
 
 
 
@@ -317,7 +317,7 @@ Could not open a connection to your authentication agent.
 
 ````
 
-***
+
 #### (8) 하둡의 Master와 Slave 설정 알리기
 - /home/hadoop/hadoop/etc/hadoop/slaves와 masters 파일 추가 ( 모든 서버에 있어야 함 , masters파일은 master서버에만 있어도 될 듯)
 ````javascript
@@ -336,7 +336,7 @@ slave02
 
 
 
-
+***
 
 ###  3) Spark-2.3.0
 

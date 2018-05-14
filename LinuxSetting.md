@@ -63,7 +63,7 @@ Could not open a connection to your authentication agent.
   $ eval $(ssh-agent)
   $ ssh-add
   
-````
+
     
   * Slave서버의 권한 변경
     * slave01/slave02의 hadoop 계정 접속
@@ -80,7 +80,7 @@ Could not open a connection to your authentication agent.
     * $ ssh hadoop@slave01 date
     * $ ssh hadoop@slave02 date ( 다른 컴퓨터들과 연결하는 작업이다. )
    
-   
+````   
    - Nadenode : Master서버 / Datanode : Slave서버 설치
    
    -/home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리

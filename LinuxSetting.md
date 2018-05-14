@@ -20,7 +20,8 @@
      
   - 환경변수 설정 : /home/hadoop/.bashrc 
  
- ````javascript
+ 
+````javascript
  
  # Set JAVA_HOME
 export JAVA_HOME=$HOME/jdk1.8.0_171
@@ -29,7 +30,7 @@ export JRE_HOME=$HOME/jdk1.8.0_171/jre
 export PATH=$PATH:$HOME/jdk1.8.0_171/jre/bin
 export CLASSPATH="."
 
- ````
+````
      
  #####  2) Hadoop-2.7.3
  
@@ -39,7 +40,7 @@ export CLASSPATH="."
    
    
    
-    ````javascript
+````javascript
  /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
 
 <configuration>
@@ -66,4 +67,4 @@ export CLASSPATH="."
 </configuration>
 
 
- ````
+````

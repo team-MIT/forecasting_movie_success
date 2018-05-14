@@ -70,7 +70,7 @@ export CLASSPATH="."
 
 ````
 
-### < Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+#### < Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
 ````javascript
 
 
@@ -100,13 +100,13 @@ export CLASSPATH="."
 ````
 
 
-### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
+#### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
 
 
 ````javascript
 <configuration>          
 
-     #Yarn Scheduler를 위한 NodeManager 
+     <!--Yarn Scheduler를 위한 NodeManager  -->
 
         <property>
                 <name>yarn.nodemanager.aux-services</name>

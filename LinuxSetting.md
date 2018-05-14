@@ -22,7 +22,6 @@ $ service iptables stop
 $ chkconfig iptables off
 ````
 
- - 
 
 
 
@@ -64,7 +63,22 @@ export CLASSPATH="."
  * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
     
     
-    
+#### .bashrc 환경변수 설정
+
+````javascript
+
+#Set HADOOP
+
+export HADOOP_HOME=$HOME/hadoop-2.7.3
+export HADOOP_CONF_DIR=$HOME/hadoop-2.7.3/etc/hadoop
+export HADOOP_MAPRED_HOME=$HOME/hadoop-2.7.3
+export HADOOP_COMMON_HOME=$HOME/hadoop-2.7.3
+export HADOOP_HDFS_HOME=$HOME/hadoop-2.7.3
+export YARN_HOME=$HOME/hadoop-2.7.3
+export PATH=$PATH:$HOME/hadoop-2.7.3/bin
+export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+````
     
 ####    (1) Master 서버 : .ssh 디렉터리 설정 
 ````javascript

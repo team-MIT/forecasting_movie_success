@@ -367,11 +367,22 @@ $ vi ~/spark/conf/log4j.properties
 ##### - spark-env.sh.template를 spark-env.sh로 복사 후 아래 코드로 
 
 ````javascript
-export SPARK_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.38-bin.jar"
-export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
-export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop
-export JAVA_HOME=/home/hadoop/jdk1.8.0_171
-export SPARK_HOME=/home/hadoop/spark-2.3.0-bin-hadoop2.7
+export JAVA_HOME=$HOME/jdk1.8.0_171
+
+export HADOOP_HOME=$HOME/hadoop-2.7.3
+export HADOOP_CONF_DIR=$HOME/hadoop-2.7.3/etc/hadoop
+
+export YARN_CONF_DIR=$HOME/hadoop-2.7.3/etc/hadoop
+
+export SPARK_HOME=$HOME/spark-2.3.0-bin-hadoop2.7
+export SPARK_CONF_DIR=$HOME/spark-2.3.0-bin-hadoop2.7/conf
+export SPARK_MASTER_HOST=192.168.1.171
+export SPARK_DAEMON_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.38-bin.jar"
+
+export SPARK_EXECUTOR_INSTANCE=5
+export SPARK_EXECUTOR_MEMORY=4g
+export SPARK_DRIVER_MEMORY=2g
+
 ````
 
 

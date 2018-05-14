@@ -52,8 +52,11 @@ export CLASSPATH="."
  
 - 모든 리눅스 서버에 Hadoop을 설치
  - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
- - hdfs dfsadmin -safemode leave 명령어를 통해 안전모드를 제거하자 ( 강제종료 및 비정상 종료 시 하둡이 자동으로 안전모드로 돌입 )
+ - $ hdfs dfsadmin -safemode leave 명령어를 통해 안전모드를 제거하자 ( 강제종료 및 비정상 종료 시 하둡이 자동으로 안전모드로 돌입 )
    
+   
+   
+   
 * SSH 인증키 등록(Master)
  * hadoop 계정 접속
  * $ssh-keygen -t rsa

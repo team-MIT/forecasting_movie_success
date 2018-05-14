@@ -40,6 +40,8 @@ export CLASSPATH="."
    
    -/home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
    
+   
+***   
 #### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
 
 ````javascript
@@ -69,6 +71,10 @@ export CLASSPATH="."
 </configuration>
 
 ````
+
+
+
+***
 
 #### < Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
 ````javascript
@@ -100,13 +106,16 @@ export CLASSPATH="."
 ````
 
 
+
+***
+
 #### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
 
 
 ````javascript
 <configuration>          
 
-     <!--Yarn Scheduler를 위한 NodeManager  -->
+     <!--Yarn Scheduler를 위한 NodeManager , ResourceManager 설정  -->
 
         <property>
                 <name>yarn.nodemanager.aux-services</name>
@@ -128,7 +137,9 @@ export CLASSPATH="."
                 <name>yarn.resourcemanager.address</name>
                 <value>master:8050</value>
         </property>
-        <property>
+        
+     <!-- Yarn의   최대 용량 할당 및  동적 메모리 할당 차단 -->
+       <property>
                 <name>yarn.scheduler.maximum-allocation-mb</name>
                 <value>40960</value>
         </property>
@@ -139,6 +150,26 @@ export CLASSPATH="."
         <property>
                 <name>yarn.nodemanager.vmem-check-enabled</name>
                 <value>false</value>
+        </property>
+</configuration>
+
+````
+
+
+
+#### < Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml >
+
+
+````javascript
+<configuration>
+        <property>
+                <name>hadoop.tmp.dir</name>
+                <value>/home/hadoop/hadoop-2.7.3/tmp</value>
+        </property>
+        <property>
+                <name>fs.default.name</name>
+                <value>hdfs://master:9000</value>
+                <description>juwon</description>
         </property>
 </configuration>
 

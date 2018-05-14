@@ -39,9 +39,9 @@ export CLASSPATH="."
    - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
    
    > hadoop 계정 접속
-   > $ssh-keygen -t rsa
-   > 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
-   > 
+    > $ssh-keygen -t rsa
+     > 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
+      > 
    
    
    - Nadenode : Master서버 / Datanode : Slave서버 설치

@@ -1,16 +1,16 @@
 # Linux Install List
 --------------------
 
-### 1. 설치  전 리눅스 세팅
+## 1. 설치  전 리눅스 세팅
 
   - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
   - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정
   - hadoop계정 내에서 모든 설치를 진행할 예정
 
 
-### 2. 프로그램 설치
+## 2. 프로그램 설치
 
-#####  1) JDK_1.8.0_171 설치
+###  1) JDK_1.8.0_171 설치
   
   - Hadoop/Spark 등 우리가 빅데이터를 다루기 위해 가장 기본적으로 필요한 것이 JAVA이다. jar파일을 이용해야 하기 때문이다.
   
@@ -32,7 +32,7 @@ export CLASSPATH="."
 
 ````
      
- #####  2) Hadoop-2.7.3
+ ###  2) Hadoop-2.7.3
  
    - 모든 리눅스 서버에 Hadoop을 설치
    
@@ -44,7 +44,7 @@ export CLASSPATH="."
     * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
     * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
     
-    < Master 서버 : .ssh 디렉터리 설정 >
+####    < Master 서버 : .ssh 디렉터리 설정 >
 ````javascript
 
   $ ssh-keygen -t rsa

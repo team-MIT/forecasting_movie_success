@@ -349,7 +349,7 @@ slave02
  - 스파크의 주요 데이터 추상화 객체(DataFrame)이 RDD로 변환하는 데 있어서 편리하다.
  - Python을 사용할 수 있는 장점이 있다.
 
-#### (0) spark 설치
+#### (0) spark 설치 및 mysql 설치
 - http://spark.apache.org/downloads.html
 
 ```javascript
@@ -359,7 +359,18 @@ $ ln -s /home/hadoop/spark/ spark-1.6.0-bin-hadoop2.6 ( 심볼릭 링크 걸기 
 $ cp ~/spark/conf/log4j.properties.template ~/spark/conf/log4j.properties
 $ vi ~/spark/conf/log4j.properties
   =>  INFO를 ERROR로 바꾸어주면 INFO정보는 나오지 않는다.
+  
+-------------------------------------------------------------------------------
+
+$ wget http://ftp.plusline.de/mysql/Downloads/Connector-J/mysql-connector-java-5.1.46.tar.gz
+$ tar -xvf mysql-connector-java-5.1.46.tar.gz
+$ cd mysql-connector-java-5.1.46.tar.gz
+
+이 디렉터리 내부에 있는 .jar파일을 /home/hadoop/hadoop/lib , /home/hadoop/spark/jars , /home/hadoop/jdk1.8.0_171/jre/lib/ext에 복사
+
 ````
+
+
 
 #### (1) spark-env.sh 수정
 
@@ -377,11 +388,12 @@ export YARN_CONF_DIR=$HOME/hadoop-2.7.3/etc/hadoop
 export SPARK_HOME=$HOME/spark-2.3.0-bin-hadoop2.7
 export SPARK_CONF_DIR=$HOME/spark-2.3.0-bin-hadoop2.7/conf
 export SPARK_MASTER_HOST=192.168.1.171
-export SPARK_DAEMON_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.38-bin.jar"
+export SPARK_DAEMON_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.46.jar"
 
 export SPARK_EXECUTOR_INSTANCE=5
 export SPARK_EXECUTOR_MEMORY=4g
 export SPARK_DRIVER_MEMORY=2g
+
 
 ````
 
@@ -392,15 +404,7 @@ export SPARK_DRIVER_MEMORY=2g
 ##### - 클러스터모드를 사용해야 하므로 설정내용도 달라야 한다.
 
 ````javascript
-spark.master                      yarn
-spark.eventLog.enabled            true
-spark.eventLog.dir                hdfs://master:9000/spark-log
-spark.history.provider            org.apache.spark.deploy.history.FsHistoryProvider
-spark.history.fs.logDirectory     hdfs://master:9000/spark-log
-spark.history.fs.update.interval  10s
-spark.history.ui.port             18080
 
-------------------------------------------------------------------------------------
 ## 클러스터 매니저가 접속할 마스터 서버 URI
 spark.master                    spark://master:7077
 ## Spark 이벤트를 기록할지의 여부, 응용 프로그램이 완료된 후 웹 UI를 재구성하는 데 유용
@@ -415,9 +419,7 @@ spark.driver.memory             2g
 #YARN SET
 spark.yarn.am.memory            1g
 spark.executor.instances                2
-spark.executor.extraJavaOptions         -Dlog4j.configuration=file:/home/hadoop/spark/conf/log4j.properties
-
-
+spark.executor.extraJavaOptions         -Dlog4j.configuration=file:///home/hadoop/spark/conf/log4j.properties
 
 ````
 

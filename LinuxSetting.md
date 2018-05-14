@@ -12,8 +12,11 @@
 #####  1) JDK_1.8.0_171 설치
   
      - Hadoop/Spark 등 우리가 빅데이터를 다루기 위해 가장 기본적으로 필요한 것이 JAVA이다. jar파일을 이용해야 하기 때문이다.
-     - JDK 설치 경로 : /home/hadoop
-     - 환경변수 설정 : /home/hadoop/.bashrc 
+  
+     - JDK 설치 경로 : /home/hadoop
+     
+     - 환경변수 설정 : /home/hadoop/.bashrc 
+ 
  ````javascript
  
  # Set JAVA_HOME

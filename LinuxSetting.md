@@ -66,9 +66,10 @@ Could not open a connection to your authentication agent.
 ````
     
   * Slave서버의 권한 변경
-    * slave01/slave02의 hadoop 계정 접속
-    * master서버가 slave01/slave02의 .ssh에 접근할 수 있도록 권한 설정
+    * slave01/slave02의 hadoop 계정 접속
+    * master서버가 slave01/slave02의 .ssh에 접근할 수 있도록 권한 설정
     * chmod 755 ~/.ssh
+  
   
   * master -> slave01/slave02 ( 인증키  복사 ) 
     * master 접속

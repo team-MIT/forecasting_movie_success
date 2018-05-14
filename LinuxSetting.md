@@ -50,7 +50,7 @@ export CLASSPATH="."
     * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
     * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
     
-####    < Master 서버 : .ssh 디렉터리 설정 >
+####    (1) Master 서버 : .ssh 디렉터리 설정 
 ````javascript
 
   $ ssh-keygen -t rsa
@@ -84,7 +84,7 @@ Could not open a connection to your authentication agent.
 
 ***
 
-#### < hadoop 환경 설정 >
+#### (2) hadoop 환경 설정 
 
 ##### /home/hadoop/hadoop/etc/hadoop/hadoop-env.sh
 ````javascript
@@ -103,7 +103,7 @@ Could not open a connection to your authentication agent.
    
 ***   
 
-#### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+#### (3) Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 ##### 데이터 저장 경로 변경
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
 
@@ -138,7 +138,7 @@ Could not open a connection to your authentication agent.
 
 ***
 
-#### < Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+#### (4) Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 ##### 데이터 저장 경로 변경
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
 ````javascript
@@ -170,7 +170,7 @@ Could not open a connection to your authentication agent.
 
 ***
 
-#### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
+#### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
 ##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 
 
 ````javascript
@@ -219,7 +219,7 @@ Could not open a connection to your authentication agent.
 
 ***
 
-#### < Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml >
+#### (6) Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml 
 #####core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
 #####로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
 
@@ -243,7 +243,7 @@ Could not open a connection to your authentication agent.
 
 ***
 
-#### < 맵리듀스에서 사용할 환경정보 설정 : /home/hadoop/hadoop/etc/hadoop/mapred-site.xml >
+#### (7) 맵리듀스에서 사용할 환경정보 설정 : /home/hadoop/hadoop/etc/hadoop/mapred-site.xml 
 
 
 ````javascript

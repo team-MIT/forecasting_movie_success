@@ -39,9 +39,8 @@ export CLASSPATH="."
    - Nadenode : Master서버 / Datanode : Slave서버 설치
    
    
-   
+###### /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml   
 ````javascript
- /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml
 
 <configuration>
         <property>
@@ -65,6 +64,5 @@ export CLASSPATH="."
                 <value>/home/hadoop/hadoop-2.7.3/hdfs/namenode2</value>
         </property>
 </configuration>
-
 
 ````

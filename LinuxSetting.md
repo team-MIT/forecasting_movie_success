@@ -102,9 +102,8 @@ Could not open a connection to your authentication agent.
 ````
 
 
-   - Nadenode : Master서버 / Datanode : Slave서버 설치
-   
-   -/home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
+- Nadenode : Master서버 / Datanode : Slave서버 설치
+ - /home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
    
 
    
@@ -190,7 +189,7 @@ Could not open a connection to your authentication agent.
 
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
-##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 
+##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문이다.
 
 ````javascript
 

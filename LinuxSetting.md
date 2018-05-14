@@ -7,7 +7,14 @@
 
 
 - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
- - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정
+ - /etc/host 파일 수정 ( 모든 서버에 적용 )
+````javascript
+127.0.0.1 localhost
+192.168.1.171 master
+192.168.1.172 slave01
+192.168.1.173 slave02
+````
+ - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정 ( 따라서 $useradd hadoop을 통해 생성한다. )
  - hadoop계정 내에서 모든 설치를 진행할 예정
 
 
@@ -153,7 +160,7 @@ Could not open a connection to your authentication agent.
 
 #### (4) Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 ##### 데이터 저장 경로 변경
-##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
+##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
 ````javascript
 
 <configuration>
@@ -190,7 +197,7 @@ Could not open a connection to your authentication agent.
 
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
-##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문이다.
+##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문.
 
 ````javascript
 
@@ -240,7 +247,6 @@ Could not open a connection to your authentication agent.
 
 
 ***
-
 
 
 

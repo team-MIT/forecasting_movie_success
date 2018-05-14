@@ -41,6 +41,7 @@ export CLASSPATH="."
    
   
 ````javascript
+
 # /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 <configuration>
         <property>

@@ -38,6 +38,9 @@ export CLASSPATH="."
 
 ````
      
+     
+     
+     
  ###  2) Hadoop-2.7.3
  
    - 모든 리눅스 서버에 Hadoop을 설치
@@ -49,6 +52,9 @@ export CLASSPATH="."
     * $ssh-keygen -t rsa
     * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
     * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
+    
+    
+    
     
 ####    (1) Master 서버 : .ssh 디렉터리 설정 
 ````javascript
@@ -82,7 +88,12 @@ Could not open a connection to your authentication agent.
    
 ````
 
+
+
+
 ***
+
+
 
 #### (2) hadoop 환경 설정 
 
@@ -102,6 +113,9 @@ Could not open a connection to your authentication agent.
 
    
 ***   
+
+
+
 
 #### (3) Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 ##### 데이터 저장 경로 변경
@@ -138,6 +152,9 @@ Could not open a connection to your authentication agent.
 
 ***
 
+
+
+
 #### (4) Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
 ##### 데이터 저장 경로 변경
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.
@@ -168,7 +185,13 @@ Could not open a connection to your authentication agent.
 
 ````
 
+
+
+
 ***
+
+
+
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
 ##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 
@@ -217,7 +240,13 @@ Could not open a connection to your authentication agent.
 
 ````
 
+
+
+
 ***
+
+
+
 
 #### (6) Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml 
 #####core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
@@ -243,6 +272,9 @@ Could not open a connection to your authentication agent.
 
 ***
 
+
+
+
 #### (7) 맵리듀스에서 사용할 환경정보 설정 : /home/hadoop/hadoop/etc/hadoop/mapred-site.xml 
 
 
@@ -261,6 +293,7 @@ Could not open a connection to your authentication agent.
 </configuration>
 
 ````
+
 
 
 #####  2) JDK_1.8.0_171 설치

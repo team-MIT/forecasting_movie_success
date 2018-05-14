@@ -124,12 +124,11 @@ Could not open a connection to your authentication agent.
 
 
 #### (3) Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
-
+##### 데이터 저장 경로 변경
+##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
 - Nadenode : Master서버 / Datanode : Slave서버 설치
  - /home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
 
-##### 데이터 저장 경로 변경
-##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
 
 ````javascript
 

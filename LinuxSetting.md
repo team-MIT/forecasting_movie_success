@@ -371,7 +371,7 @@ export SPARK_HOME=/home/hadoop/spark-2.3.0-bin-hadoop2.7
 ````
 
 
-#### (3) spark-defaults.conf 수정
+#### (2) spark-defaults.conf 수정
 
 ##### - /home/hadoop/spark/conf/spark-defaults.conf
 
@@ -386,6 +386,109 @@ spark.history.ui.port             18080
 ````
 
 
-####
+#### (3) start-all.sh 수정 ( spark )
+##### - 우리는 이미 하둡의 start-all.sh를 사용하고 있기 때문에 스파크의 start-all.sh명령을 사용하기 위해서는 해당 경로로 가서 실행해야 한다.
+##### - 따라서, spark/sbin/start-all.sh 와 stop-all.sh의 내용을 복사하여 ~/hadoop/sbin/start-all.sh와 stop.sh하단에 붙여넣자.
+
+````javascript
+# ======================start-all.sh===========================
+
+# Start all hadoop daemons.  Run this on master node.
+
+echo "This script is Deprecated. Instead use start-dfs.sh and start-yarn.sh"
+
+bin=`dirname "${BASH_SOURCE-$0}"`
+bin=`cd "$bin"; pwd`
+
+DEFAULT_LIBEXEC_DIR="$bin"/../libexec
+HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
+. $HADOOP_LIBEXEC_DIR/hadoop-config.sh
+
+# start hdfs daemons if hdfs is present
+if [ -f "${HADOOP_HDFS_HOME}"/sbin/start-dfs.sh ]; then
+  "${HADOOP_HDFS_HOME}"/sbin/start-dfs.sh --config $HADOOP_CONF_DIR
+fi
+
+# start yarn daemons if yarn is present
+if [ -f "${HADOOP_YARN_HOME}"/sbin/start-yarn.sh ]; then
+  "${HADOOP_YARN_HOME}"/sbin/start-yarn.sh --config $HADOOP_CONF_DIR
+fi
+
+# Start all spark daemons.
+# Starts the master on this node.
+# Starts a worker on each node specified in conf/slaves
+
+if [ -z "${SPARK_HOME}" ]; then
+  export SPARK_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+fi
+
+# Load the Spark configuration
+. "${SPARK_HOME}/sbin/spark-config.sh"
+
+# Start Master
+"${SPARK_HOME}/sbin"/start-master.sh
+
+# Start Workers
+"${SPARK_HOME}/sbin"/start-slaves.sh
+
+# ======================stop-all.sh===========================
+
+# Stop all hadoop daemons.  Run this on master node.
+
+echo "This script is Deprecated. Instead use stop-dfs.sh and stop-yarn.sh"
+
+bin=`dirname "${BASH_SOURCE-$0}"`
+bin=`cd "$bin"; pwd`
+
+DEFAULT_LIBEXEC_DIR="$bin"/../libexec
+HADOOP_LIBEXEC_DIR=${HADOOP_LIBEXEC_DIR:-$DEFAULT_LIBEXEC_DIR}
+. $HADOOP_LIBEXEC_DIR/hadoop-config.sh
+
+# stop hdfs daemons if hdfs is present
+if [ -f "${HADOOP_HDFS_HOME}"/sbin/stop-dfs.sh ]; then
+  "${HADOOP_HDFS_HOME}"/sbin/stop-dfs.sh --config $HADOOP_CONF_DIR
+fi
+
+# stop yarn daemons if yarn is present
+if [ -f "${HADOOP_HDFS_HOME}"/sbin/stop-yarn.sh ]; then
+  "${HADOOP_HDFS_HOME}"/sbin/stop-yarn.sh --config $HADOOP_CONF_DIR
+fi
+
+
+# Stop all spark daemons.
+# Run this on the master node.
+
+if [ -z "${SPARK_HOME}" ]; then
+  export SPARK_HOME="$(cd "`dirname "$0"`"/..; pwd)"
+fi
+
+# Load the Spark configuration
+. "${SPARK_HOME}/sbin/spark-config.sh"
+
+# Stop the slaves, then the master
+"${SPARK_HOME}/sbin"/stop-slaves.sh
+"${SPARK_HOME}/sbin"/stop-master.sh
+
+
+if [ "$1" == "--wait" ]
+then
+  printf "Waiting for workers to shut down..."
+  while true
+  do
+    running=`${SPARK_HOME}/sbin/slaves.sh ps -ef | grep -v grep | grep deploy.worker.Worker`
+    if [ -z "$running" ]
+    then
+      printf "\nAll workers successfully shut down.\n"
+      break
+    else
+      printf "."
+      sleep 10
+    fi
+  done
+fi
+
+
+
+````
 
 

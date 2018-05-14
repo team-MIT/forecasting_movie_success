@@ -257,8 +257,9 @@ Could not open a connection to your authentication agent.
 
 
 #### (6) Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml 
-#####core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
-#####로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
+
+##### core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
+##### 로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
 
 ````javascript
 

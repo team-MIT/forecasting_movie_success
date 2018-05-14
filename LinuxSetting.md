@@ -39,10 +39,10 @@ export CLASSPATH="."
    - Nadenode : Master서버 / Datanode : Slave서버 설치
    
    
-  
+### /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml   
 ````javascript
 
-# /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
+
 <configuration>
         <property>
                 <name>dfs.replication</name>

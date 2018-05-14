@@ -40,15 +40,14 @@ export CLASSPATH="."
      
  ###  2) Hadoop-2.7.3
  
-   - 모든 리눅스 서버에 Hadoop을 설치
+- 모든 리눅스 서버에 Hadoop을 설치
+ - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
    
-   - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
-   
-  * SSH 인증키 등록(Master)
-    * hadoop 계정 접속
-    * $ssh-keygen -t rsa
-    * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
-    * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
+* SSH 인증키 등록(Master)
+ * hadoop 계정 접속
+ * $ssh-keygen -t rsa
+ * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
+ * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
     
     
     

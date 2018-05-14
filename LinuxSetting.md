@@ -378,6 +378,7 @@ export SPARK_HOME=/home/hadoop/spark-2.3.0-bin-hadoop2.7
 #### (2) spark-defaults.conf 수정
 
 ##### - /home/hadoop/spark/conf/spark-defaults.conf
+##### - 클러스터모드를 사용해야 하므로 설정내용도 달라야 한다.
 
 ````javascript
 spark.master                      yarn
@@ -387,6 +388,26 @@ spark.history.provider            org.apache.spark.deploy.history.FsHistoryProvi
 spark.history.fs.logDirectory     hdfs://master:9000/spark-log
 spark.history.fs.update.interval  10s
 spark.history.ui.port             18080
+
+------------------------------------------------------------------------------------
+## 클러스터 매니저가 접속할 마스터 서버 URI
+spark.master                    spark://master:7077
+## Spark 이벤트를 기록할지의 여부, 응용 프로그램이 완료된 후 웹 UI를 재구성하는 데 유용
+spark.eventLog.enabled          true
+spark.eventLog.dir              file:///home/hadoop/spark/sparkEventLog
+## 네트워크를 통해 전송되거나 직렬화 된 형식으로 캐시되어야 하는 객체를 직렬화하는 데 사용할 클래스
+spark.serializer                org.apache.spark.serializer.KryoSerializer
+## 드라이버 프로세스, 즉 SparkContext가 초기화되는 곳에 사용할 메모리 크기
+## 클라이언트 응용프로그램에서 직접 변경하면ㅇ ㅏㄴ된다.
+spark.driver.memory             2g
+
+#YARN SET
+spark.yarn.am.memory            1g
+spark.executor.instances                2
+spark.executor.extraJavaOptions         -Dlog4j.configuration=file:/home/hadoop/spark/conf/log4j.properties
+
+
+
 ````
 
 

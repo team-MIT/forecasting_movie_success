@@ -138,8 +138,8 @@ Could not open a connection to your authentication agent.
 
 
 #### (3) Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
-##### 데이터 저장 경로 변경
-##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
+##### - 데이터 저장 경로 변경
+##### - hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
 - Nadenode : Master서버 / Datanode : Slave서버 설치
  - /home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
 
@@ -179,8 +179,8 @@ Could not open a connection to your authentication agent.
 
 
 #### (4) Slave (DataNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml 
-##### 데이터 저장 경로 변경
-##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
+##### - 데이터 저장 경로 변경
+##### - hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정.
 ````javascript
 
 <configuration>
@@ -217,7 +217,7 @@ Could not open a connection to your authentication agent.
 
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
-##### default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문.
+##### - default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문.
 
 ````javascript
 
@@ -272,8 +272,8 @@ Could not open a connection to your authentication agent.
 
 #### (6) Master서버 지정 : /home/hadoop/hadoop/etc/hadoop/core-site.xml 
 
-##### core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
-##### 로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
+##### - core-site.xml 파일은 HDFS와 맵리듀스에서 공통적으로 사용할 환경정보 설정
+##### - 로그파일, 네트워크 튜닝, I/O 튜닝, 파일 시스템 튜닝, 압축 등 하부 시스템 설정파일
 
 ````javascript
 
@@ -319,7 +319,7 @@ Could not open a connection to your authentication agent.
 
 
 #### (8) 하둡의 Master와 Slave 설정 알리기
-- /home/hadoop/hadoop/etc/hadoop/slaves와 masters 파일 추가 ( 모든 서버에 있어야 함 , masters파일은 master서버에만 있어도 될 듯)
+##### - /home/hadoop/hadoop/etc/hadoop/slaves와 masters 파일 추가 ( 모든 서버에 있어야 함 , masters파일은 master서버에만 있어도 될 듯)
 ````javascript
 <masters>
 master
@@ -359,8 +359,8 @@ $ vi ~/spark/conf/log4j.properties
 
 #### (1) spark-env.sh 수정
 
-##### /home/hadoop/spark/conf/spark-env.sh
-##### spark-env.sh.template를 spark-env.sh로 복사 후 아래 코드로 
+##### - /home/hadoop/spark/conf/spark-env.sh
+##### - spark-env.sh.template를 spark-env.sh로 복사 후 아래 코드로 
 
 ````javascript
 export SPARK_CLASSPATH="$SPARK_HOME/jars/mysql-connector-java-5.1.38-bin.jar"
@@ -373,7 +373,7 @@ export SPARK_HOME=/home/hadoop/spark-2.3.0-bin-hadoop2.7
 
 #### (3) spark-defaults.conf 수정
 
-##### /home/hadoop/spark/conf/spark-defaults.conf
+##### - /home/hadoop/spark/conf/spark-defaults.conf
 
 ````javascript
 spark.master                      yarn

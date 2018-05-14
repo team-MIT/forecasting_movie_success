@@ -36,14 +36,15 @@ def logIn(code):
                 actor += str(cont + ",")
         return actor
     #19금 영화일 경우 login 처리를 한다.
+    
     USER = "<INSERT YOUR ID>"
     PASS = "<INSERT YOUR PASSWORD>"
     print("PhantomJS 드라이버 실행")
-
+    
     driver = webdriver.PhantomJS()
     #driver.get_screenshot_as_file("web.png")
     driver.get('https://nid.naver.com/nidlogin.login')
-    driver.implicitly_wait(1)
+    driver.implicitly_wait(3)
 
     e = driver.find_element_by_id("id")
     e.clear()
@@ -65,16 +66,16 @@ def logIn(code):
     except:
         return
     #print(html)
-    
     soup = bs4.BeautifulSoup(html,'html.parser')
-    director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
+    director = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
   
-    name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
+    name = fText(soup.select("#content > div.article > div.wide_info_area > div.mv_info > h3 > a"))
     rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
     aList = r2Text(soup.select("#content > div.article > div.section_group.section_group_frst > div.obj_section.noline > div > div.lst_people_area.height100 > ul > li"))
     driver.save_screenshot("web.png")
     if(rateList == None):
         rateList = "0.00"
+    
     return name + "|" + director + "|" + rateList + "|" + aList + "|"
 
 
@@ -105,16 +106,17 @@ def getMovieName(code):
                 cont = re.sub('<[^>]+>.+?', '', cont)
                 actor += str(cont + ",")
         return actor
-    
+    #print("여기까진 실행됨", code)
     try:
         _url = ("https://movie.naver.com/movie/bi/mi/detail.nhn?code=" + str(code))
         # + str(code)
-        
+        #print("url : " , _url)
         f = urllib.request.urlopen(_url)
+        #print("여기까진 실행됨")
         data = f.read().decode('utf-8')   
     except:
         return
-    
+    #print("여기도 실행댐")
     #bs4를 이용해서 각각의 css 선택자를 통해 데이터를 긁어온다
     soup = bs4.BeautifulSoup(re.sub("&#(?![0-9])", "", data),'html.parser')
     
@@ -126,12 +128,15 @@ def getMovieName(code):
     if(rateList == None):
         rateList = "0.00"
     
+    detail = ""
     #19금 영화일 경우
-    if(name == ""):
+    if(name == "") :
+        print("19금처리")
         #로그인 처리를 해준다
-        logIn(code)
-    else:
-        return name + "|" + director + "|" + rateList + "|" + aList + "|"
+        detail = logIn(code)
+    else :
+        detail = name + "|" + director + "|" + rateList + "|" + aList + "|"
+    return detail
     
 def getComments(code):
     def makeArgs(code, page):
@@ -212,7 +217,7 @@ def fetch(i):
     f.write("%s" %detail)
     f.write('\n')
     twitter = Twitter()
-    for r in enumerate(rs):
+    for idx,r in enumerate(rs):
         #각 사용자가 개인별로 부여한 평점
         f.write("%s|" % (r[1]))
         #koNLpy의 twitter 형태소 분석기를 통해 명사만 뽑아낸다.
@@ -225,7 +230,7 @@ def fetch(i):
         f.write("%s\n" %word_dic)           
     f.close()
     time.sleep(1)
- 
+
 #5개의 쓰레드 생성
 with ThreadPoolExecutor(max_workers=5) as executor:
     for i in range(10001, 200000):

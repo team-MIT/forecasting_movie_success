@@ -80,14 +80,29 @@ Could not open a connection to your authentication agent.
     * $ ssh hadoop@slave01 date
     * $ ssh hadoop@slave02 date ( 다른 컴퓨터들과 연결하는 작업이다. )
    
-````   
-   - Nadenode : Master서버 / Datanode : Slave서버 설치
+````
+
+***
+
+#### < hadoop 환경 설정 >
+
+##### /home/hadoop/hadoop/etc/hadoop/hadoop-env.sh
+````javascript
+
+ export JAVA_HOME=${JAVA_HOME}
+ export HADOOP_CONF_DIR=${HADOOP_CONF_DIR:-"/etc/hadoop"}
+
+````
+
+
+   - Nadenode : Master서버 / Datanode : Slave서버 설치
    
    -/home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
    
-   
+
    
 ***   
+
 #### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
 ##### 데이터 저장 경로 변경
 ##### hdfs-site.xml 파일은 HDFS에서 사용할 환경 정보를 설정합니다.

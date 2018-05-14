@@ -296,7 +296,17 @@ Could not open a connection to your authentication agent.
 
 ````
 
+***
+#### (8) 하둡의 Master와 Slave 설정 알리기
+- /home/hadoop/hadoop/etc/hadoop/slaves와 master 파일 추가
+````javascript
+<masters>
+master
 
+<slaves>
+slave01
+slave02
+````
 
 #####  2) JDK_1.8.0_171 설치
   

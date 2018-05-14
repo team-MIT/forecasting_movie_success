@@ -7,7 +7,7 @@
 #### koNLpy를 사용하기 위해선 다음과 같은 명령어를 통해 먼저 필요한 Python module들을 가져온다. 개발환경은 docker의 ubuntu이다.
 
 ````javascript
-pip install bs4
+    pip install bs4
     apt-get install g++ openjdk-8-jdk python-dev python3-dev
     pip install konlpy
     pip install jpype1
@@ -20,7 +20,7 @@ pip install bs4
 #### 다음과 같이 환경을 만들어준다.
 
 ````javascript
-apt-get update
+    apt-get update
     pip install selenium
 
     apt-get install -y wget libfontconfig
@@ -32,5 +32,5 @@ apt-get update
 ````
 #### 그 다음, 한글 폰트를 설치한다.
 ````javascript
-apt-get install -y fonts-nanum*
+    apt-get install -y fonts-nanum*
 ````

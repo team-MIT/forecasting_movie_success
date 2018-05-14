@@ -6,9 +6,9 @@
 ## 1. 설치  전 리눅스 세팅
 
 
-  - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
-   - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정
-   - hadoop계정 내에서 모든 설치를 진행할 예정
+- 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
+ - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정
+ - hadoop계정 내에서 모든 설치를 진행할 예정
 
 
 

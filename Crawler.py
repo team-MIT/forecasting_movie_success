@@ -212,18 +212,17 @@ def fetch(i):
     f.write("%s" %detail)
     f.write('\n')
     twitter = Twitter()
-    for idx, r in enumerate(rs):
-        if idx:
-            #각 사용자가 개인별로 부여한 평점
-            f.write("%s|" % (r[1]))
-            #koNLpy의 twitter 형태소 분석기를 통해 명사만 뽑아낸다.
-            malist = twitter.pos(r[2].replace("'", "''").replace("\\", "\\\\"),norm=True, stem=True)
-            word_dic = []
-            for word in malist:
-                if word[1] != "Josa" and word[1] != "Conjunction" and word[1] != "Punctuation":
-                    word_dic.append(word[0])
-            #print(word_dic)
-            f.write("%s\n" %word_dic)           
+    for r in enumerate(rs):
+        #각 사용자가 개인별로 부여한 평점
+        f.write("%s|" % (r[1]))
+        #koNLpy의 twitter 형태소 분석기를 통해 명사만 뽑아낸다.
+        malist = twitter.pos(r[2].replace("'", "''").replace("\\", "\\\\"),norm=True, stem=True)
+        word_dic = []
+        for word in malist:
+            if word[1] != "Josa" and word[1] != "Conjunction" and word[1] != "Punctuation":
+                word_dic.append(word[0])
+        #print(word_dic)
+        f.write("%s\n" %word_dic)           
     f.close()
     time.sleep(1)
  

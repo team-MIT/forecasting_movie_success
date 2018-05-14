@@ -42,6 +42,24 @@ export CLASSPATH="."
     * hadoop 계정 접속
     * $ssh-keygen -t rsa
     * 위의 명령으로 생성된 키는 /home/hadoop/.ssh/경로에 있다.
+    * id_rsa 는 개인키 / id_rsa.pub 는 공개키 
+    
+    < Master 서버 : .ssh 디렉터리 설정 >
+````javascript
+
+  $ ssh-keygen -t rsa
+  $ cd ~/.ssh/ 
+  $ cp ./id_rsa.pub ./authorized_keys
+  $ chmod 755 ~/.ssh
+  $ chmod 644 ~/.ssh/autorized_keys
+  $ ssh-add
+Could not open a connection to your authentication agent.
+  $ eval $(ssh-agent)
+  $ ssh-add
+  
+````
+    
+    
 
    
    

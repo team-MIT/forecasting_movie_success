@@ -38,9 +38,10 @@ export CLASSPATH="."
    
    - Nadenode : Master서버 / Datanode : Slave서버 설치
    
-   
-### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
-##### /home/hadoop/hadoop-2.7.3/hdfs/namenode2은 mkdir
+   -/home/hadoop/hadoop-2.7.3/hdfs/namenode2와 datanode2는 각 Master와 Slave에 만들어준 디렉터리
+   
+#### < Master(NameNode설정) : /home/hadoop/hadoop/etc/hadoop/hdfs-site.xml >
+
 ````javascript
 
 
@@ -99,9 +100,51 @@ export CLASSPATH="."
 ````
 
 
-### 2. 프로그램 설치
+### < Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml >
 
-#####  1) JDK_1.8.0_171 설치
+
+````javascript
+<configuration>          
+
+     #Yarn Scheduler를 위한 NodeManager 
+
+        <property>
+                <name>yarn.nodemanager.aux-services</name>
+                <value>mapreduce_shuffle</value>
+        </property>
+        <property>  
+                <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+                <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.resource-tracker.address</name>
+                <value>master:8025</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.scheduler.address</name>
+                <value>master:8030</value>
+        </property>
+        <property>
+                <name>yarn.resourcemanager.address</name>
+                <value>master:8050</value>
+        </property>
+        <property>
+                <name>yarn.scheduler.maximum-allocation-mb</name>
+                <value>40960</value>
+        </property>
+        <property>
+                <name>yarn.nodemanager.pmem-check-enabled</name>
+                <value>false</value>
+        </property>
+        <property>
+                <name>yarn.nodemanager.vmem-check-enabled</name>
+                <value>false</value>
+        </property>
+</configuration>
+
+````
+
+#####  2) JDK_1.8.0_171 설치
   
   - Hadoop/Spark 등 우리가 빅데이터를 다루기 위해 가장 기본적으로 필요한 것이 JAVA이다. jar파일을 이용해야 하기 때문이다.
   

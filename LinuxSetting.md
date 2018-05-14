@@ -16,8 +16,13 @@
 ````
  - 우리가 사용할 계정은 'root'가 아닌 'hadoop'계정 ( 따라서 $useradd hadoop을 통해 생성한다. )
  - hadoop계정 내에서 모든 설치를 진행할 예정
+ - hadoop이 모든 서버에 접근 가능하게 방화벽을 해제시켜주어야 한다.
+````javascript
+$ service iptables stop
+$ chkconfig iptables off
+````
 
-
+ - 
 
 
 
@@ -32,14 +37,12 @@
  
  
 ````javascript
- 
  # Set JAVA_HOME
 export JAVA_HOME=$HOME/jdk1.8.0_171
 export PATH=$HOME/jdk1.8.0_171/bin:$PATH
 export JRE_HOME=$HOME/jdk1.8.0_171/jre
 export PATH=$PATH:$HOME/jdk1.8.0_171/jre/bin
 export CLASSPATH="."
-
 ````
      
      
@@ -49,7 +52,8 @@ export CLASSPATH="."
  
 - 모든 리눅스 서버에 Hadoop을 설치
  - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
-   
+ - hdfs dfsadmin -safemode leave 명령어를 통해 안전모드를 제거하자 ( 강제종료 및 비정상 종료 시 하둡이 자동으로 안전모드로 돌입 )
+   
 * SSH 인증키 등록(Master)
  * hadoop 계정 접속
  * $ssh-keygen -t rsa
@@ -298,7 +302,7 @@ Could not open a connection to your authentication agent.
 
 ***
 #### (8) 하둡의 Master와 Slave 설정 알리기
-- /home/hadoop/hadoop/etc/hadoop/slaves와 master 파일 추가
+- /home/hadoop/hadoop/etc/hadoop/slaves와 masters 파일 추가 ( 모든 서버에 있어야 함 , masters파일은 master서버에만 있어도 될 듯)
 ````javascript
 <masters>
 master

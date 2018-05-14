@@ -56,7 +56,7 @@ def logIn(code):
     e.send_keys(PASS)
     form = driver.find_element_by_css_selector("#frmNIDLogin > fieldset > input")
     form.submit()
-    #driver.save_screenshot("web.png")
+    
     try:
         _url = ("https://movie.naver.com/movie/bi/mi/detail.nhn?code=" + str(code))
         #print("url : " , _url)
@@ -64,12 +64,15 @@ def logIn(code):
         html = driver.page_source  
     except:
         return
+    #print(html)
+    
     soup = bs4.BeautifulSoup(html,'html.parser')
     director = fText(soup.select("#content > div > div.mv_info_area > div.mv_info > dl > dd > p > a")) 
+  
     name = fText(soup.select("#content > div.article > div.mv_info_area > div.mv_info > h3 > a"))
     rateList = rText(soup.select("#pointNetizenPersentBasic > em"))
     aList = r2Text(soup.select("#content > div.article > div.section_group.section_group_frst > div.obj_section.noline > div > div.lst_people_area.height100 > ul > li"))
-    
+    driver.save_screenshot("web.png")
     if(rateList == None):
         rateList = "0.00"
     return name + "|" + director + "|" + rateList + "|" + aList + "|"
@@ -102,17 +105,16 @@ def getMovieName(code):
                 cont = re.sub('<[^>]+>.+?', '', cont)
                 actor += str(cont + ",")
         return actor
-    #print("여기까진 실행됨", code)
+    
     try:
         _url = ("https://movie.naver.com/movie/bi/mi/detail.nhn?code=" + str(code))
         # + str(code)
-        #print("url : " , _url)
+        
         f = urllib.request.urlopen(_url)
-        #print("여기까진 실행됨")
         data = f.read().decode('utf-8')   
     except:
         return
-    #print("여기도 실행댐")
+    
     #bs4를 이용해서 각각의 css 선택자를 통해 데이터를 긁어온다
     soup = bs4.BeautifulSoup(re.sub("&#(?![0-9])", "", data),'html.parser')
     

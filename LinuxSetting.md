@@ -366,6 +366,14 @@ $ wget http://ftp.plusline.de/mysql/Downloads/Connector-J/mysql-connector-java-5
 $ tar -xvf mysql-connector-java-5.1.46.tar.gz
 $ cd mysql-connector-java-5.1.46.tar.gz
 
+
+-------------------------------------------------------------------------------
+
+위의 과정이 끝나면 #HOME/spark/conf/slaves파일을 수정한다
+localhost
+slave01
+slave02
+
 이 디렉터리 내부에 있는 .jar파일을 /home/hadoop/hadoop/lib , /home/hadoop/spark/jars , /home/hadoop/jdk1.8.0_171/jre/lib/ext에 복사
 
 ````

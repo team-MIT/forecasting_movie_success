@@ -491,4 +491,15 @@ fi
 
 ````
 
+#### (4) 환경변수 설정
+##### - $~/.bashrc
+````javascript
+#Set SPARK_HOME
+export SPARK_HOME=$HOME/spark
+export PATH=$PATH:$SPARK_HOME/bin
+export LD_LIBRARY_PATH=/home/hadoop/hadoop/lib/native:$LD_LIBRARY_PATH
+#export SPARK_MAJOR_VERSION=2
+export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$PYTHONPATH
+export PATH=$SPARK_HOME/python:$PATH
+````
 

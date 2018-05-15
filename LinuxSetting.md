@@ -613,6 +613,19 @@ export PATH=$SPARK_HOME/python:$PATH
 
 $ cd ~/spark/jars
 $ pyspark --jars mysql-connector-java-5.1.46.jar
+Python 2.6.6 (r266:84292, Aug 18 2016, 15:13:37) 
+[GCC 4.4.7 20120313 (Red Hat 4.4.7-17)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 2.3.0
+      /_/
+
+Using Python version 2.6.6 (r266:84292, Aug 18 2016 15:13:37)
+SparkSession available as 'spark'.
+
 >>> df = sqlContext.read.format("jdbc").options(url="jdbc:mysql://localhost:3306/hadoop",driver="com.mysql.jdbc.Driver",dbtable="test_table",user="root",password="우리비밀번호").load();
 
 >>> df.show();

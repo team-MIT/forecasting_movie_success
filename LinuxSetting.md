@@ -52,7 +52,8 @@ export CLASSPATH="."
 - 모든 리눅스 서버에 Hadoop을 설치
  - Hadoop이 모든 Slave서버에 인증없이 접근 가능하게 하기 위해 ssh 인증키를 등록해야 한다.
  - $ hdfs dfsadmin -safemode leave 명령어를 통해 안전모드를 제거하자 ( 강제종료 및 비정상 종료 시 하둡이 자동으로 안전모드로 돌입 
- - hdfs명령은 환경변수 설정을 해주거나 ./hadoop/bin/hdfs를 이용하여 실행하자. 또, hadoop패키지 이름이 길기 때문에 $ ln명령을 사용하여 링크걸어주자 )
+ - hdfs명령은 환경변수 설정을 해주거나 ./hadoop/bin/hdfs를 이용하여 실행하자. 또, hadoop패키지 이름이 길기 때문에 $ ln명령을 사용하여
+ 링크걸어주자 )
  
  - ##### - https://www.popit.kr/what-is-hadoop-yarn/  를 통해 yarn의 역할에 대한 이해도를 높혀보자
    
@@ -395,7 +396,8 @@ $ grant all privileges on *.* to 'hadoop'@'master' identified by '사용할 비�
 $ flush privileges
 
 
-( %가 모든 호스트를 뜻하지만 잘 먹히지 않는 것 같아 IP주소를 일일이 추가해줌. 위의 과정이 끝나면 $ service mysqld restart를 통해 설정적용 )
+( %가 모든 호스트를 뜻하지만 잘 먹히지 않는 것 같아 IP주소를 일일이 추가해줌. 위의 과정이 끝나면
+$ service mysqld restart를 통해 설정적용 )
 
 $ mysql mysql -p   ( p명령을 통해 비밀번호 입력하여 접속할 수 있다. )
 password : ~~
@@ -489,7 +491,8 @@ spark.executor.extraJavaOptions         -Dlog4j.configuration=file:///home/hadoo
 
 
 #### (3) start-all.sh 수정 ( spark )
-##### - 우리는 이미 하둡의 start-all.sh를 사용하고 있기 때문에 스파크의 start-all.sh명령을 사용하기 위해서는 해당 경로로 가서 실행해야 한다.
+##### - 우리는 이미 하둡의 start-all.sh를 사용하고 있기 때문에 스파크의 start-all.sh명령을 사용하기 위해서는
+#####   해당 경로로 가서 실행해야 한다.
 ##### - 따라서, spark/sbin/start-all.sh 와 stop-all.sh의 내용을 복사하여 ~/hadoop/sbin/start-all.sh와 stop.sh하단에 붙여넣자.
 
 ````javascript

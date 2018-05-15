@@ -7,7 +7,7 @@
 
 
 - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
- - /etc/host 파일 수정 ( 모든 서버에 적용 )
+ - /etc/hosts 파일 수정 ( 모든 서버에 적용 )
 ````javascript
 127.0.0.1 localhost
 192.168.1.171 master

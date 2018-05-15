@@ -631,7 +631,8 @@ Welcome to
 Using Python version 2.6.6 (r266:84292, Aug 18 2016 15:13:37)
 SparkSession available as 'spark'.
 
->>> df = sqlContext.read.format("jdbc").options(url="jdbc:mysql://localhost:3306/hadoop",driver="com.mysql.jdbc.Driver",dbtable="test_table",user="root",password="우리비밀번호").load();
+>>> df = sqlContext.read.format("jdbc").options(url="jdbc:mysql://localhost:3306/hadoop",driver="com.mysql.jdbc.Driver"\
+,dbtable="test_table",user="root",password="우리비밀번호").load();
 
 >>> df.show();
 +------+------+-------------+
@@ -644,5 +645,15 @@ SparkSession available as 'spark'.
 | KMS  |   28 | NOWON       |
 | YMS  |   30 | DONGINCHEON |
 +------+------+-------------+
+
+>>> df.registerTempTable("KJW");
+>>> sqlContext.sql("select * from test_table where age <28").show();
++----+---+-------+
+|name|age|   addr|
++----+---+-------+
+| KJW| 27|  SEOUL|
+| LYB| 24|GANGNAM|
+| YTW| 27|INCHEON|
++----+---+-------+
 
 ````

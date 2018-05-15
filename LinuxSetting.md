@@ -361,20 +361,76 @@ $ vi ~/spark/conf/log4j.properties
   =>  INFO를 ERROR로 바꾸어주면 INFO정보는 나오지 않는다.
   
 -------------------------------------------------------------------------------
+$ yum -y install mysqld mysql-server
+$ mysql mysql ( 이 명령어의 의미는 mysql이름을 가진 database로 접속하겠다는 의미이고, 접속계정은 hadoop@localhost가 된다. 계정이나 호스트를 변경하고 싶다면 -h 나 -u를 통해서 명령어에 추가하면 된다. 첫 접속은 비밀번호를 필요로 하지 않기 때문에 $ mysql mysql명령을 통해 mysql데이터베이스로 접속한다. )
 
-$ wget http://ftp.plusline.de/mysql/Downloads/Connector-J/mysql-connector-java-5.1.46.tar.gz
-$ tar -xvf mysql-connector-java-5.1.46.tar.gz
-$ cd mysql-connector-java-5.1.46.tar.gz
+$ show database; ( mysql데이터베이스가 있는 것을 확인할 수 있다. )
+$ use mysql;
+$ select user , host , password from user;
++--------+---------------+-------------------------------------------+
+| user   | host          | password                                  |
++--------+---------------+-------------------------------------------+
+| root   | localhost     | ***************************************** |
+| root   | master        |                                           |
+| root   | 127.0.0.1     |                                           |
+|        | localhost     |                                           |
+|        | master        |                                           |
+| root   | %             | ***************************************** |
+| hadoop | %             | ***************************************** |
+| hadoop | localhost     | ***************************************** |
+| hadoop | 127.0.0.1     | ***************************************** |
+| hadoop | 192.168.1.171 | ***************************************** |
+| hadoop | 192.168.1.172 | ***************************************** |
+| hadoop | 192.168.1.173 | ***************************************** |
++--------+---------------+-------------------------------------------+
+
+( 위의 화면은 내가 접근 가능한 계정을 추가하고 비밀번호를 설정한 것임. 위의 과정을 아래 명령어를 통해 수행하자. )
+
+$ grant all privileges on *.* to 'hadoop'@'localhost' identified by '사용할 비밀번호';
+$ grant all privileges on *.* to 'hadoop'@'%' identified by '사용할 비밀번호';
+$ grant all privileges on *.* to 'hadoop'@'192.168.171' identified by '사용할 비밀번호';
+$ grant all privileges on *.* to 'hadoop'@'192.168.172' identified by '사용할 비밀번호';
+$ grant all privileges on *.* to 'hadoop'@'192.168.173' identified by '사용할 비밀번호';
+$ grant all privileges on *.* to 'hadoop'@'master' identified by '사용할 비밀번호';
+$ flush privileges
+
+
+( %가 모든 호스트를 뜻하지만 잘 먹히지 않는 것 같아 IP주소를 일일이 추가해줌. 위의 과정이 끝나면 $ service mysqld restart를 통해 설정적용 )
+
+$ mysql mysql -p   ( p명령을 통해 비밀번호 입력하여 접속할 수 있다. )
+password : ~~
+
+( 비밀번호 입력 후, 잘 접속이 되면 적용이 완료된 것이다. )
+
+$ create database hadoop;
+$ use hadoop;
+$ create table test_table(name varchar(50) , age int , addr varchat(255));
+$ insert into test_table values( "LYB", 24 , "SEOUL");
+$ insert into test_table values( "KJW", 27 , "BUSAN");
+$ insert into test_table values( "YTW", 27 , "BUSAN");
+$ insert into test_table values( "KMS", 28 , "DAEJUN");
+$ insert into test_table values( "YMS", 30 , "KANGNAM");
+$ select * from hadoop.test_table  ( hadoop이름의 database내의 test_table을 뜻함 )
 
 
 -------------------------------------------------------------------------------
 
-위의 과정이 끝나면 #HOME/spark/conf/slaves파일을 수정한다
-localhost
+
+$ wget http://ftp.plusline.de/mysql/Downloads/Connector-J/mysql-connector-java-5.1.46.tar.gz
+$ tar -xvf mysql-connector-java-5.1.46.tar.gz
+$ cd mysql-connector-java-5.1.46
+$ cp mysql-connector-java-5.1.46 ~/hadoop/lib
+$ cp mysql-connector-java-5.1.46 ~/jdk1.8.0_171/jre/lib/ext
+$ cp $ cp mysql-connector-java-5.1.46 ~/spark-2.3.0-bin-hadoop2.7/jars
+
+
+-------------------------------------------------------------------------------
+
+위의 과정이 끝나면 #HOME/spark/conf/slaves파일을 수정한다 ( slaves파일은 반드시 master서버에서만 있어야 한다. )
 slave01
 slave02
 
-이 디렉터리 내부에 있는 .jar파일을 /home/hadoop/hadoop/lib , /home/hadoop/spark/jars , /home/hadoop/jdk1.8.0_171/jre/lib/ext에 복사
+
 
 ````
 
@@ -421,7 +477,7 @@ spark.eventLog.dir              file:///home/hadoop/spark/sparkEventLog
 ## 네트워크를 통해 전송되거나 직렬화 된 형식으로 캐시되어야 하는 객체를 직렬화하는 데 사용할 클래스
 spark.serializer                org.apache.spark.serializer.KryoSerializer
 ## 드라이버 프로세스, 즉 SparkContext가 초기화되는 곳에 사용할 메모리 크기
-## 클라이언트 응용프로그램에서 직접 변경하면ㅇ ㅏㄴ된다.
+## 클라이언트 응용프로그램에서 직접 변경하면 안된다.
 spark.driver.memory             2g
 
 #YARN SET
@@ -437,7 +493,7 @@ spark.executor.extraJavaOptions         -Dlog4j.configuration=file:///home/hadoo
 ##### - 따라서, spark/sbin/start-all.sh 와 stop-all.sh의 내용을 복사하여 ~/hadoop/sbin/start-all.sh와 stop.sh하단에 붙여넣자.
 
 ````javascript
-# ======================start-all.sh===========================
+# ===================================================start-all.sh===========================================================
 
 # Start all hadoop daemons.  Run this on master node.
 
@@ -477,7 +533,8 @@ fi
 # Start Workers
 "${SPARK_HOME}/sbin"/start-slaves.sh
 
-# ======================stop-all.sh===========================
+
+# ===================================================stop-all.sh===========================================================
 
 # Stop all hadoop daemons.  Run this on master node.
 
@@ -549,3 +606,25 @@ export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:
 export PATH=$SPARK_HOME/python:$PATH
 ````
 
+
+#### (5) mysql과 spark의 연동 확인
+
+````javascript
+
+$ cd ~/spark/jars
+$ pyspark --jars mysql-connector-java-5.1.46.jar
+>>> df = sqlContext.read.format("jdbc").options(url="jdbc:mysql://localhost:3306/hadoop",driver="com.mysql.jdbc.Driver",dbtable="test_table",user="root",password="우리비밀번호").load();
+
+>>> df.show();
++------+------+-------------+
+| name | age  | addr        |
++------+------+-------------+
+| KJW  |   27 | SEOUL       |
+| LYB  |   24 | GANGNAM     |
+| YTW  |   27 | INCHEON     |
+| YTW  |   28 | NOWON       |
+| KMS  |   28 | NOWON       |
+| YMS  |   30 | DONGINCHEON |
++------+------+-------------+
+
+````

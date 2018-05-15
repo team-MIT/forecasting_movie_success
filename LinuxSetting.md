@@ -363,7 +363,9 @@ $ vi ~/spark/conf/log4j.properties
   
 -------------------------------------------------------------------------------
 $ yum -y install mysqld mysql-server
-$ mysql mysql ( 이 명령어의 의미는 mysql이름을 가진 database로 접속하겠다는 의미이고, 접속계정은 hadoop@localhost가 된다. 계정이나 호스트를 변경하고 싶다면 -h 나 -u를 통해서 명령어에 추가하면 된다. 첫 접속은 비밀번호를 필요로 하지 않기 때문에 $ mysql mysql명령을 통해 mysql데이터베이스로 접속한다. )
+$ mysql mysql ( 이 명령어의 의미는 mysql이름을 가진 database로 접속하겠다는 의미이고, 접속계정은 hadoop@localhost가 된다.
+  계정이나 호스트를 변경하고 싶다면 -h 나 -u를 통해서 명령어에 추가하면 된다. 첫 접속은 비밀번호를 필요로 하지 않기 때문에 
+  $ mysql mysql명령을 통해 mysql데이터베이스로 접속한다. )
 
 $ show database; ( mysql데이터베이스가 있는 것을 확인할 수 있다. )
 $ use mysql;

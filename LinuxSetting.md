@@ -748,4 +748,18 @@ SparkSession available as 'spark'.
 | YTW| 27|INCHEON|
 +----+---+-------+
 
+
 ````
+
+#### (5) hdfs에 있는 대용량 txt을 가져와서 테이블형태로 삽입 후, 쿼리문 날려보기
+
+https://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases
+
+1) 중요한 Point
+  - user의 접근권한을 grant를 사용하여 변경해주어야 한다.
+  - slave01,slave02에 대용량 txt를 담을 테이블이 있어야 함 ( 칼럼명과 칼럼 타입이 일치해야 함 )
+  - utf8적용이 되어있지 않으면 ????가 뜰 것이다.
+  - 
+
+
+

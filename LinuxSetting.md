@@ -784,6 +784,18 @@ df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='appe
 >>> jdbcDF.createOrReplaceTempView(“movie”)
 >>> director=spark.sql(“SELECT director from movie”)
 
+5) 생성한 DataFrame을 하둡에 적재하기
+>>> director.write.csv("/test")
+
+6) 하둡에서 적재 확인하기.
+$ hdfs dfs -ls /test
+-rw-r--r--   2 hadoop supergroup          0 2018-05-17 00:32 /test/_SUCCESS
+-rw-r--r--   2 hadoop supergroup      80134 2018-05-17 00:32 /test/part-00000-8cab6db5-24f0-4cfb-bec7-2cfc0ccdd0aa-c000.csv
+
+
+
+
+
 5) example uri
 
 https://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases

@@ -367,9 +367,9 @@ $ mysql mysql ( 이 명령어의 의미는 mysql이름을 가진 database로 접
   계정이나 호스트를 변경하고 싶다면 -h 나 -u를 통해서 명령어에 추가하면 된다. 첫 접속은 비밀번호를 필요로 하지 않기 때문에 
   $ mysql mysql명령을 통해 mysql데이터베이스로 접속한다. )
 
-$ show database; ( mysql데이터베이스가 있는 것을 확인할 수 있다. )
-$ use mysql;
-$ select user , host , password from user;
+mysql> show database; ( mysql데이터베이스가 있는 것을 확인할 수 있다. )
+mysql> use mysql;
+mysql> select user , host , password from user;
 +--------+---------------+-------------------------------------------+
 | user   | host          | password                                  |
 +--------+---------------+-------------------------------------------+
@@ -389,13 +389,13 @@ $ select user , host , password from user;
 
 ( 위의 화면은 내가 접근 가능한 계정을 추가하고 비밀번호를 설정한 것임. 위의 과정을 아래 명령어를 통해 수행하자. )
 
-$ grant all privileges on *.* to 'hadoop'@'localhost' identified by '사용할 비밀번호';
-$ grant all privileges on *.* to 'hadoop'@'%' identified by '사용할 비밀번호';
-$ grant all privileges on *.* to 'hadoop'@'192.168.171' identified by '사용할 비밀번호';
-$ grant all privileges on *.* to 'hadoop'@'192.168.172' identified by '사용할 비밀번호';
-$ grant all privileges on *.* to 'hadoop'@'192.168.173' identified by '사용할 비밀번호';
-$ grant all privileges on *.* to 'hadoop'@'master' identified by '사용할 비밀번호';
-$ flush privileges
+mysql> grant all privileges on *.* to 'hadoop'@'localhost' identified by '사용할 비밀번호';
+mysql> grant all privileges on *.* to 'hadoop'@'%' identified by '사용할 비밀번호';
+mysql> grant all privileges on *.* to 'hadoop'@'192.168.171' identified by '사용할 비밀번호';
+mysql> grant all privileges on *.* to 'hadoop'@'192.168.172' identified by '사용할 비밀번호';
+mysql> grant all privileges on *.* to 'hadoop'@'192.168.173' identified by '사용할 비밀번호';
+mysql> grant all privileges on *.* to 'hadoop'@'master' identified by '사용할 비밀번호';
+mysql> flush privileges
 
 
 ( %가 모든 호스트를 뜻하지만 잘 먹히지 않는 것 같아 IP주소를 일일이 추가해줌. 위의 과정이 끝나면
@@ -406,15 +406,15 @@ password : ~~
 
 ( 비밀번호 입력 후, 잘 접속이 되면 적용이 완료된 것이다. )
 
-$ create database hadoop;
-$ use hadoop;
-$ create table test_table(name varchar(50) , age int , addr varchat(255));
-$ insert into test_table values( "LYB", 24 , "SEOUL");
-$ insert into test_table values( "KJW", 27 , "BUSAN");
-$ insert into test_table values( "YTW", 27 , "BUSAN");
-$ insert into test_table values( "KMS", 28 , "DAEJUN");
-$ insert into test_table values( "YMS", 30 , "KANGNAM");
-$ select * from hadoop.test_table  ( hadoop이름의 database내의 test_table을 뜻함 )
+mysql> create database hadoop;
+mysql> use hadoop;
+mysql> create table test_table(name varchar(50) , age int , addr varchat(255));
+mysql> insert into test_table values( "LYB", 24 , "SEOUL");
+mysql> insert into test_table values( "KJW", 27 , "BUSAN");
+mysql> insert into test_table values( "YTW", 27 , "BUSAN");
+mysql> insert into test_table values( "KMS", 28 , "DAEJUN");
+mysql> insert into test_table values( "YMS", 30 , "KANGNAM");
+mysql> select * from hadoop.test_table  ( hadoop이름의 database내의 test_table을 뜻함 )
 
 
 -------------------------------------------------------------------------------
@@ -434,6 +434,88 @@ $ cp $ cp mysql-connector-java-5.1.46 ~/spark-2.3.0-bin-hadoop2.7/jars
 slave01
 slave02
 
+
+-------------------------------------------------------------------------------
+
+<< spark의 executor가 slave01,slave02에 있으므로, 실제 mysql에 접근될 곳은 slave01,slave02이다. 따라서, 적재할 서버의 설정과 table은 
+모두 슬레이브 서버에서 설정하고 생성해주어야 한다. >>
+
+$ sudo vi /etc/my.cnf
+
+
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+collation-server=utf8_unicode_ci
+init-connect='SET NAMES utf8'
+character-set-server=utf8
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+#symbolic-links=0
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+
+위의 설정을 통해 utf8로 변경해주어야 데이터 적재 시, 한글이 깨지지 않는 것을 볼 수 있다.
+
+
+$ mysql hadoop -p
+password : ___________
+
+mysql> alter database hadoop default character set utf8;
+
+mysql> show variables like 'c%'
+
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8                       |
+| character_set_connection | utf8                       |
+| character_set_database   | utf8                       |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8                       |
+| character_set_server     | utf8                       |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
+| collation_connection     | utf8_general_ci            |
+| collation_database       | utf8_general_ci            |
+| collation_server         | utf8_unicode_ci            |
+| completion_type          | 0                          |
+| concurrent_insert        | 1                          |
+| connect_timeout          | 10                         |
++--------------------------+----------------------------+
+
+mysql> status;
+
+Connection id:		9
+Current database:	hadoop
+Current user:		root@localhost
+SSL:			Not in use
+Current pager:		stdout
+Using outfile:		''
+Using delimiter:	;
+Server version:		5.1.73 Source distribution
+Protocol version:	10
+Connection:		Localhost via UNIX socket
+Server characterset:	utf8
+Db     characterset:	utf8
+Client characterset:	utf8
+Conn.  characterset:	utf8
+UNIX socket:		/var/lib/mysql/mysql.sock
+Uptime:			9 min 26 sec
+
+
+<<<< utf8로 인코딩 설정이 되었는지 확인해보자 >>>>
 
 
 ````
@@ -483,11 +565,18 @@ spark.serializer                org.apache.spark.serializer.KryoSerialize
 ## 드라이버 프로세스, 즉 SparkContext가 초기화되는 곳에 사용할 메모리 크기
 ## 클라이언트 응용프로그램에서 직접 변경하면 안된다.
 spark.driver.memory             2g
+spark.sql.catalogImplementation in-memory
 
-#YARN SET
-spark.yarn.am.memory            1g
+# History Set
+spark.history.provider            org.apache.spark.deploy.history.FsHistoryProvider
+spark.history.fs.logDirectory     hdfs://master:9000/spark-logs
+spark.history.fs.update.interval  10s
+spark.history.ui.port             18080
+
+
 spark.executor.instances                2
 spark.executor.extraJavaOptions         -Dlog4j.configuration=file:///home/hadoop/spark/conf/log4j.properties
+spark.executor.memory           1g
 
 ````
 

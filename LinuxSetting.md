@@ -252,6 +252,7 @@ Could not open a connection to your authentication agent.
         </property>
         
      <!-- Yarn의   최대 용량 할당 및  동적 메모리 할당 차단 -->
+<!--     
        <property>
                 <name>yarn.scheduler.maximum-allocation-mb</name>
                 <value>40960</value>
@@ -264,6 +265,8 @@ Could not open a connection to your authentication agent.
                 <name>yarn.nodemanager.vmem-check-enabled</name>
                 <value>false</value>
         </property>
+        
+-->        
 </configuration>
 
 ````

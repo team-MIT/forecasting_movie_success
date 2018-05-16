@@ -762,16 +762,17 @@ SparkSession available as 'spark'.
 ````javascript
 1) hdfs의 대용량 txt파일을 DataFrame으로 변환
 
- - df=sqlContext.read.format('com.databricks.spark.csv').options(header='true',encoding='utf-8', delimiter=';').load('file:///home/hadoop/spark/examples/src/main/resources/people.csv')
+$ pyspark
+ >>> df=sqlContext.read.format('com.databricks.spark.csv').options(header='true',encoding='utf-8', delimiter=';').load('file:///home/hadoop/spark/examples/src/main/resources/people.csv')
 
 2) DataFrame을 Mysql테이블에 적재
 
-- df_props={'user':'root', 'password':'123456','driver':'com.mysql.jdbc.Driver'}
+>>> df_props={'user':'root', 'password':'123456','driver':'com.mysql.jdbc.Driver'}
 df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='append', properties=df_props)
 
 3) DataFrame
 
-- jdbcDF=spark.read\
+>>> jdbcDF=spark.read\
 .format(“jdbc”)\
 .option(“url”,”jdbc:msyql://localhost”)\
 .option(“dbtable”,”hadoop.movie4”)\
@@ -780,8 +781,8 @@ df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='appe
 .load()
 
 4) Spark 내에서 SQL 쿼리문 작성해보기
-jdbcDF.createOrReplaceTempView(“movie”)
-director=spark.sql(“SELECT director from movie”)
+>>> jdbcDF.createOrReplaceTempView(“movie”)
+>>> director=spark.sql(“SELECT director from movie”)
 
 5) example uri
 

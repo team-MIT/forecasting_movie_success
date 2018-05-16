@@ -5,9 +5,10 @@
 
 ## 1. 설치  전 리눅스 세팅
 
+- Linux Version : CentOS 6.9
 
 - 사용 IP : 171(Master), 172(Slave01), 173(Slave02)
- - /etc/hosts 파일 수정 ( 모든 서버에 적용 )
+ - /etc/hosts 파일 수정 ( 모든 서버에 아래 내용 적용 )
 ````javascript
 127.0.0.1 localhost
 192.168.1.171 master
@@ -752,14 +753,42 @@ SparkSession available as 'spark'.
 ````
 
 #### (5) hdfs에 있는 대용량 txt을 가져와서 테이블형태로 삽입 후, 쿼리문 날려보기
-
-https://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases
-
-1) 중요한 Point
+ ##### * 중요한 Point
   - user의 접근권한을 grant를 사용하여 변경해주어야 한다.
   - slave01,slave02에 대용량 txt를 담을 테이블이 있어야 함 ( 칼럼명과 칼럼 타입이 일치해야 함 )
   - utf8적용이 되어있지 않으면 ????가 뜰 것이다.
   - 
+
+````javascript
+1) hdfs의 대용량 txt파일을 DataFrame으로 변환
+
+ - df=sqlContext.read.format('com.databricks.spark.csv').options(header='true',encoding='utf-8', delimiter=';').load('file:///home/hadoop/spark/examples/src/main/resources/people.csv')
+
+2) DataFrame을 Mysql테이블에 적재
+
+- df_props={'user':'root', 'password':'123456','driver':'com.mysql.jdbc.Driver'}
+df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='append', properties=df_props)
+
+3) DataFrame
+
+- jdbcDF=spark.read\
+.format(“jdbc”)\
+.option(“url”,”jdbc:msyql://localhost”)\
+.option(“dbtable”,”hadoop.movie4”)\
+.option(“user”,”hadoop”)\
+.option(“password”,”123456”)\
+.load()
+
+4) Spark 내에서 SQL 쿼리문 작성해보기
+jdbcDF.createOrReplaceTempView(“movie”)
+director=spark.sql(“SELECT director from movie”)
+
+5) example uri
+
+https://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases
+
+````
+
 
 
 

@@ -223,6 +223,7 @@ Could not open a connection to your authentication agent.
 
 #### (5) Yarn 설정 : /home/hadoop/hadoop/etc/hadoop/yarn-site.xml 
 ##### - default설정을 하는게 맞지만 mapred-site.xml에서 yarn을 선택했기 때문.
+##### - yarn을 쓰는 이유 : https://www.popit.kr/what-is-hadoop-yarn/   
 
 
 ````javascript

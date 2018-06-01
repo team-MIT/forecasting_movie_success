@@ -797,12 +797,79 @@ $ hdfs dfs -ls /test
 
 
 
-5) example uri
+### 4) Redis
 
-https://spark.apache.org/docs/latest/sql-programming-guide.html#jdbc-to-other-databases
+#### (1) redis-ml 설치
+
+````javascript
+
+$ sudo yum -y install libatlas-base-dev
+$ sudo yum install -y atlas-devel atlas-static
+$ ln -s /usr/lib64/atlas/libatlas.a /usr/lib64/libatlas.a
+$ ln -s /usr/lib64/atlas/libatlas.so /usr/lib64/libcblas.a
+
+$ git clone https://github.com/RedisLabsModules/redis-ml.git
+$ cd redis-ml/src
+$ make
+
+$ redis-server --loadmodule /path/to/redis-ml/src/redis-ml.so
+````
+
+#### (2)jedis / jedis-ml / spark-jedis-ml 설치
+
+
+##### maven 설치
+````javascript
+$ cd /usr/local/src
+$ wget http://www-us.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+$ tar -xvf apache-maven-3.5.3-bin.tar.gz
+$ rm -rf apache-maven-3.5.3-bin.tar.gz
+$ mv ./apache-maven-3.5.3 ./apache-maven
+
+$ cd /etc/profile.d/
+$ vi maven.sh
+
+# Apache Maven Environment Variables
+# MAVEN_HOME for Maven 1 - M2_HOME for Maven 2
+export M2_HOME=/usr/local/src/apache-maven
+export PATH=${M2_HOME}/bin:${PATH}
+
+$ chmod +x maven.sh
+$ source /etc/profile.d/maven.sh
+$ mvn --version
+위의 mvn 명령이 먹히는지 확인해보자.
 
 ````
 
 
+
+
+#### jedis설치
+````javascript
+#get and build jedis
+$ cd ~
+$ git clone https://github.com/xetorthio/jedis.git
+$ cd jedis
+$ mvn package -Dmaven.test.skip=true
+위의 결과로 /home/hadoop/jedis/target/jedis-3.0.0-SNAPSHOT.jar가 생성되어있을 것이다.
+
+
+#get and build jedis-ml
+$ cd ~
+$ git clone https://github.com/RedisLabs/jedis-ml.git
+$ cd jedis-ml
+$ mkdir lib
+$ cp ../jedis/target/jedis-3.0.0-SNAPSHOT.jar lib/
+$ mvn install 
+
+#get and build spark-jedis-ml
+cd.. 
+git clone https://github.com/RedisLabs/spark-redis-ml.git
+cd spark-redis-ml
+cp ../jedis/target/jedis-3.0.0-SNAPSHOT.jar lib/
+cp ../jedis-ml/target/jedis-ml-1.0-SNAPSHOT.jar lib/
+sbt assembly
+
+````
 
 

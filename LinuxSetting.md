@@ -799,10 +799,21 @@ $ hdfs dfs -ls /test
 
 ### 4) Redis
 
-#### (1) redis-ml 설치
+#### (1) redis-3.0.3 설치
 
 ````javascript
+$ wget http://download.redis.io/releases/redis-3.0.3.tar.gz
+$ tar -xvf redis-3.0.3.tar.gz
+$ rm -rf redis-3.0.3.tar.gz
+$ cd redis-3.0.3
+$ vi vi tests/integration/replication-psync.tcl
+after 100으로 되어있는 것을 after 500으로 바꾼다.
+$ make 
+$ make install
+$ make test
+==> test error없이 잘 설치된 것임.
 
+---------------------------------------redis-ml관련 ln인데 설치안할거면 아래명령은 실행안해도됨.--------------------------------------------
 $ sudo yum -y install libatlas-base-dev
 $ sudo yum install -y atlas-devel atlas-static
 $ ln -s /usr/lib64/atlas/libatlas.a /usr/lib64/libatlas.a

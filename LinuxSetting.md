@@ -864,23 +864,215 @@ $ cd jedis
 $ mvn package -Dmaven.test.skip=true
 위의 결과로 /home/hadoop/jedis/target/jedis-3.0.0-SNAPSHOT.jar가 생성되어있을 것이다.
 
-
-#get and build jedis-ml
-$ cd ~
-$ git clone https://github.com/RedisLabs/jedis-ml.git
-$ cd jedis-ml
-$ mkdir lib
-$ cp ../jedis/target/jedis-3.0.0-SNAPSHOT.jar lib/
-$ mvn install 
-
-#get and build spark-jedis-ml
-cd.. 
-git clone https://github.com/RedisLabs/spark-redis-ml.git
-cd spark-redis-ml
-cp ../jedis/target/jedis-3.0.0-SNAPSHOT.jar lib/
-cp ../jedis-ml/target/jedis-ml-1.0-SNAPSHOT.jar lib/
-sbt assembly
-
 ````
 
+#### (3) Redis more properly
 
+````javascript
+$ sudo mkdir /etc/redis
+$ sudo mkdir /var/redis
+
+$ cd $HOME/redis
+$ utils/redis_init_script /etc/init.d/redis_6379
+$ sudo vi /etc/init.d/redis_6379
+$ sudo cp redis.conf /etc/redis/6379.conf
+
+Create a directory inside /var/redis that will work as data and working directory for this Redis instance:
+$ sudo mkdir /var/redis/6379
+
+Set the pidfile to /var/run/redis_6379.pid (modify the port if needed):
+$ vi /var/run/redis_6379.pid
+ 2852
+ 
+Log Check:
+$ vi /var/log/redis_6379.log
+Last login: Mon Jun  4 14:07:34 on console
+JuwonK-MacBook-Pro:~ juwon.k$ ssh hadoop@192.168.1.171
+hadoop@192.168.1.171's password: 
+Last login: Tue Jun  5 01:24:35 2018 from 192.168.1.58
+[hadoop@master ~]$ clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[hadoop@master ~]$ ls
+derby.log  hadoop-2.7.3  jedis         part-00000-cb5036a7-26e8-48ca-bbe3-be8ca8dc782a-c000.csv  redis-3.0.3                spark-redis
+downloads  hdfs_file     metastore_db  read_hdfs.py                                              spark                      spark-warehouse
+hadoop     jdk1.8.0_171  my36project   redis                                                     spark-2.3.0-bin-hadoop2.7  test.csv
+[hadoop@master ~]$ clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[hadoop@master ~]$ ls
+derby.log  hadoop-2.7.3  jedis         part-00000-cb5036a7-26e8-48ca-bbe3-be8ca8dc782a-c000.csv  redis-3.0.3                spark-redis
+downloads  hdfs_file     metastore_db  read_hdfs.py                                              spark                      spark-warehouse
+hadoop     jdk1.8.0_171  my36project   redis                                                     spark-2.3.0-bin-hadoop2.7  test.csv
+[hadoop@master ~]$ ls
+derby.log  hadoop-2.7.3  jedis         part-00000-cb5036a7-26e8-48ca-bbe3-be8ca8dc782a-c000.csv  redis-3.0.3                spark-redis
+downloads  hdfs_file     metastore_db  read_hdfs.py                                              spark                      spark-warehouse
+hadoop     jdk1.8.0_171  my36project   redis                                                     spark-2.3.0-bin-hadoop2.7  test.csv
+[hadoop@master ~]$ cd redis
+[hadoop@master redis]$ ls
+00-RELEASENOTES  CONTRIBUTING  INSTALL    Makefile  deps      redis.conf  runtest-cluster   sentinel.conf  tests
+BUGS             COPYING       MANIFESTO  README    dump.rdb  runtest     runtest-sentinel  src            utils
+[hadoop@master redis]$ vi /var/run/redis_6379.pid 
+[hadoop@master redis]$ vi /var/run/redis_6379.pid 
+[hadoop@master redis]$ ps
+  PID TTY          TIME CMD
+16081 pts/2    00:00:00 bash
+16185 pts/2    00:00:00 ps
+[hadoop@master redis]$ jps
+3445 ResourceManager
+3718 Master
+3273 SecondaryNameNode
+15977 SparkSubmit
+16187 Jps
+3071 NameNode
+[hadoop@master redis]$ clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[hadoop@master redis]$ vi /var/run/redis_6379.pid 
+[hadoop@master redis]$ vi /var/log/redis
+redis/          redis_6379.log  
+[hadoop@master redis]$ vi /var/log/redis_6379.log 
+[hadoop@master redis]$ vi /var/log/redis_6379.log 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      1 2852:M 02 Jun 01:32:07.290 * Increased maximum number of open files         to 10032 (it was originally set to 1024).
+      2                 _._                                                         
+      3            _.-``__ ''-._                                                    
+      4       _.-``    `.  `_.  ''-._           Redis 3.0.3 (00000000/0) 64         bit
+      5   .-`` .-```.  ```\/    _.,_ ''-._                                          
+      6  (    '      ,       .-`  | `,    )     Running in standalone mode
+      7  |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+      8  |    `-._   `._    /     _.-'    |     PID: 2852
+      9   `-._    `-._  `-./  _.-'    _.-'                                          
+     10  |`-._`-._    `-.__.-'    _.-'_.-'|                                         
+     11  |    `-._`-._        _.-'_.-'    |           http://redis.io               
+     12   `-._    `-._`-.__.-'_.-'    _.-'                                          
+     13  |`-._`-._    `-.__.-'    _.-'_.-'|                                         
+     14  |    `-._`-._        _.-'_.-'    |                                         
+     15   `-._    `-._`-.__.-'_.-'    _.-'                                          
+     16       `-._    `-.__.-'    _.-'                                              
+     17           `-._        _.-'                                                  
+     18               `-.__.-'                                                      
+     19 
+     20 2852:M 02 Jun 01:32:07.291 # Server started, Redis version 3.0.3
+     
+Finally add the new Redis init script to all the default runlevels using the following command:
+$ sudo update-rc.d redis_6379 defaults
+
+
+You are done! Now you can try running your instance with:
+$ sudo /etc/init.d/redis_6379 start
+$
+
+````

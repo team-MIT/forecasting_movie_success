@@ -782,6 +782,7 @@ df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='appe
 .load()
 
 4) Spark 내에서 SQL 쿼리문 작성해보기
+The sql function on a SparkSession enables applications to run SQL queries programmatically and returns the result as a DataFrame:
 >>> jdbcDF.createOrReplaceTempView(“movie”)
 >>> director=spark.sql(“SELECT director from movie”)
 

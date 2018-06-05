@@ -792,7 +792,7 @@ df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='appe
 $ hdfs dfs -ls /test
 -rw-r--r--   2 hadoop supergroup          0 2018-05-17 00:32 /test/_SUCCESS
 -rw-r--r--   2 hadoop supergroup      80134 2018-05-17 00:32 /test/part-00000-8cab6db5-24f0-4cfb-bec7-2cfc0ccdd0aa-c000.csv
-
+````
 
 
 
@@ -806,7 +806,7 @@ $ wget http://download.redis.io/releases/redis-3.0.3.tar.gz
 $ tar -xvf redis-3.0.3.tar.gz
 $ rm -rf redis-3.0.3.tar.gz
 $ cd redis-3.0.3
-$ vi vi tests/integration/replication-psync.tcl
+$ vi tests/integration/replication-psync.tcl
 after 100으로 되어있는 것을 after 500으로 바꾼다.
 $ make 
 $ make install
@@ -914,6 +914,12 @@ $ sudo update-rc.d redis_6379 defaults
 
 You are done! Now you can try running your instance with:
 $ sudo /etc/init.d/redis_6379 start
-$
+
+````
+
+#### (4) Spark -> Redis Connection
+
+````javascript
+$ spark-shell —jars spark-redis/target/spark-redis-0.3.2-jar-with-dependencies.jar, jedis/target/jedis-3.0.0-SNAPSHOT.jar
 
 ````

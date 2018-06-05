@@ -796,7 +796,14 @@ $ hdfs dfs -ls /test
 -rw-r--r--   2 hadoop supergroup      80134 2018-05-17 00:32 /test/part-00000-8cab6db5-24f0-4cfb-bec7-2cfc0ccdd0aa-c000.csv
 ````
 
+#### (6) movieInfo table + Score table JOIN하기 
+- movieInfo (영화명,배급사,극장수,관람수 등이 있는 테이블)
+ - Score (영화명, 평점)
+ - 새로운테이블명 ( movieInfo의 모든 칼럼 + 평점 )
+````javascript
 
+>>> create table 새로운테이블명 as ( select A.*, B.score from A , B where A.title = B.title);
+````
 
 
 ### 4) Redis

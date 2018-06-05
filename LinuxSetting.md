@@ -832,20 +832,20 @@ $ redis-server --loadmodule /path/to/redis-ml/src/redis-ml.so
 ##### maven 설치
 ````javascript
 $ cd /usr/local/src
-$ sudo wget http://www-us.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
-$ sudo tar -xvf apache-maven-3.5.3-bin.tar.gz
-$ sudo rm -rf apache-maven-3.5.3-bin.tar.gz
-$ sudo mv ./apache-maven-3.5.3 ./apache-maven
+$ wget http://www-us.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+$ tar -xvf apache-maven-3.5.3-bin.tar.gz
+$ rm -rf apache-maven-3.5.3-bin.tar.gz
+$ mv ./apache-maven-3.5.3 ./apache-maven
 
 $ cd /etc/profile.d/
-$ sudo vi maven.sh
+$ vi maven.sh
 
 # Apache Maven Environment Variables
 # MAVEN_HOME for Maven 1 - M2_HOME for Maven 2
 export M2_HOME=/usr/local/src/apache-maven
 export PATH=${M2_HOME}/bin:${PATH}
 
-$ sudo chmod +x maven.sh
+$ chmod +x maven.sh
 $ source /etc/profile.d/maven.sh
 $ mvn --version
 위의 mvn 명령이 먹히는지 확인해보자.
@@ -917,9 +917,24 @@ $ sudo /etc/init.d/redis_6379 start
 
 ````
 
-#### (4) Spark -> Redis Connection
+#### (4) Spark Shell에서 Redis 연결하기
 
 ````javascript
-$ spark-shell —jars spark-redis/target/spark-redis-0.3.2-jar-with-dependencies.jar, jedis/target/jedis-3.0.0-SNAPSHOT.jar
+$ spark-shell —jars spark-redis/target/spark-redis-0.3.2-jar-with-dependencies.jar, jedis/target/jedis-3.0.0-SNAPSHOT.jar --master local
+
+$scala> import com.redislabs.provider.redis._
+import com.redislabs.provider.redis._
+
+$scala> val redisServerDnsAddress = "REDIS_ADDRESS"
+redisServerDnsAddress: String = REDIS_ADDRESS
+
+$scala> val redisPortNumber = 6379
+redisPortNumber: Int = 6379
+
+$scala> val redisPassword = "REDIS_PASSWORD"
+redisPassword: String = REDIS_PASSWORD
+
+$scala> val redisConfig = new RedisConfig(new RedisEndpoint(redisServerDnsAddress, redisPortNumber, redisPassword))
+redisConfig: com.redislabs.provider.redis.RedisConfig = com.redislabs.provider.redis.RedisConfig@758d4aa9
 
 ````

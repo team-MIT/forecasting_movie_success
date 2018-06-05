@@ -764,12 +764,13 @@ SparkSession available as 'spark'.
 1) hdfs의 대용량 txt파일을 DataFrame으로 변환
 
 $ pyspark
- >>> df=sqlContext.read.format('com.databricks.spark.csv').options(header='true',encoding='utf-8', delimiter=';').load('file:///home/hadoop/spark/examples/src/main/resources/people.csv')
+ >>> df=sqlContext.read.format('com.databricks.spark.csv').options(header='true',encoding='utf-8', delimiter=',').load('file:///home/hadoop/spark/examples/src/main/resources/people.csv')
 
 2) DataFrame을 Mysql테이블에 적재
 
->>> df_props={'user':'root', 'password':'123456','driver':'com.mysql.jdbc.Driver'}
-df.write.jdbc(url='jdbc:mysql://localhost:3306/hadoop', table='movie',mode='append', properties=df_props)
+>>>df.write\
+  .option("createTableColumnTypes", "TITLE VARCHAR(200), DIRECTOR VARCHAR(100), COMPANY VARCHAR(200), MONTH INT, TYPE     VARCHAR(50), COUNTRY VARCHAR(50), SCREEN INT, VIEWER LONG, GENRE VARCHAR(100), GRADE VARCHAR(150)") \
+  .jdbc("jdbc:mysql://slave01:3306/hadoop", "hadoop.movieInfo",properties={"user": "USERNAME", "password": "PASSWORD"})
 
 3) DataFrame
 

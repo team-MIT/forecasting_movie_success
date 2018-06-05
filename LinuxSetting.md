@@ -832,20 +832,20 @@ $ redis-server --loadmodule /path/to/redis-ml/src/redis-ml.so
 ##### maven 설치
 ````javascript
 $ cd /usr/local/src
-$ wget http://www-us.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
-$ tar -xvf apache-maven-3.5.3-bin.tar.gz
-$ rm -rf apache-maven-3.5.3-bin.tar.gz
-$ mv ./apache-maven-3.5.3 ./apache-maven
+$ sudo wget http://www-us.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.tar.gz
+$ sudo tar -xvf apache-maven-3.5.3-bin.tar.gz
+$ sudo rm -rf apache-maven-3.5.3-bin.tar.gz
+$ sudo mv ./apache-maven-3.5.3 ./apache-maven
 
 $ cd /etc/profile.d/
-$ vi maven.sh
+$ sudo vi maven.sh
 
 # Apache Maven Environment Variables
 # MAVEN_HOME for Maven 1 - M2_HOME for Maven 2
 export M2_HOME=/usr/local/src/apache-maven
 export PATH=${M2_HOME}/bin:${PATH}
 
-$ chmod +x maven.sh
+$ sudo chmod +x maven.sh
 $ source /etc/profile.d/maven.sh
 $ mvn --version
 위의 mvn 명령이 먹히는지 확인해보자.

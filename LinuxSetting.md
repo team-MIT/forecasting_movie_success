@@ -947,3 +947,73 @@ $scala> val redisConfig = new RedisConfig(new RedisEndpoint(redisServerDnsAddres
 redisConfig: com.redislabs.provider.redis.RedisConfig = com.redislabs.provider.redis.RedisConfig@758d4aa9
 
 ````
+
+
+
+
+### 번외
+
+#### MLlib 기법
+
+````javascript
+import org.apache.spark.ml.feature.StringIndexer
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.linalg.Vectors
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.ml.feature.StringIndexer
+
+val df = spark.read.csv("/project/dataset/dataset.csv")
+spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
+val df2 = df.select('_c0.as("Title"),'_c1.as("Director"),'_c2.as("Company"),callUDF("toDouble",'_c3).as("Month"),'_c4.as("Type"), '_c5.as("Country"),callUDF("toDouble", '_c6).as("Screen"),callUDF("toDouble", '_c7).as("Viewer"), '_c8 as("Genre"), '_c9 as("Grade"), callUDF("toDouble", '_c10).as("Score"))
+
+
+df2.printSchema()
+
+def func(d: Double):Int = {
+      if (d >= 2095375)
+     0
+      else if (d >= 1000000)
+     1
+     else
+     2
+     }
+
+spark.udf.register("viewer_level", (v: Double) => func(v) )
+
+val df4 = df2.select('Title, 'Director, 'Company, 'Month, 'Type, 'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre, 'Grade,'Score)
+
+
+
+val titleIndexer = new StringIndexer().setInputCol("Title").setOutputCol("TitleCode")
+val df5 = titleIndexer.fit(df4).transform(df4)
+val directorIndexer = new StringIndexer().setInputCol("Director").setOutputCol("DirectorCode")
+val df6 = directorIndexer.fit(df5).transform(df5)
+val companyIndexer = new StringIndexer().setInputCol("Company").setOutputCol("CompanyCode")
+ val df7 = companyIndexer.fit(df6).transform(df6)
+val typeIndexer = new StringIndexer().setInputCol("Type").setOutputCol("TypeCode")
+val df8 = typeIndexer.fit(df7).transform(df7)
+val countryIndexer = new StringIndexer().setInputCol("Country").setOutputCol("CountryCode")
+val df9 = countryIndexer.fit(df8).transform(df8)
+ val genreIndexer = new StringIndexer().setInputCol("Genre").setOutputCol("GenreCode")
+val df10 = genreIndexer.fit(df9).transform(df9)
+val gradeIndexer = new StringIndexer().setInputCol("Grade").setOutputCol("GradeCode")
+val df11 = gradeIndexer.fit(df10).transform(df10)
+
+val df12 = df11.limit(1000)
+
+val assembler = new VectorAssembler().setInputCols(Array("Score","GenreCode")).setOutputCol("features")
+
+val df13 = assembler.transform(df12)
+
+val Array(train, test) = df13.randomSplit(Array(0.7, 0.3))
+
+val lr = new LinearRegression().setMaxIter(5).setRegParam(0.3).setLabelCol("Viewer_level").setFeaturesCol("features")
+
+val model = lr.fit(train)
+
+println("결정계수: " + model.summary.r2)
+
+val df14 = model.setPredictionCol("predict_Viewer").transform(test)
+
+val df15 = df14.select("Viewer_level", "predict_Viewer").show(100, false)
+````

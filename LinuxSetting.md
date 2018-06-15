@@ -962,7 +962,7 @@ import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.StringIndexer
 
 // train데이터 
-
+ "'"
 val df = spark.read.csv("/project/DDDD.csv")
 spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
 
@@ -1064,7 +1064,7 @@ val newDF13 = model.setPredictionCol("predic_viewer").transform(newDF12)
 newDF13.cache()
 
 newDF13.select("Title","predic_viewer").show(10,false)
-
+"'"
 +----------------------------------+-------------------+
 |Title                             |predic_viewer      |
 +----------------------------------+-------------------+

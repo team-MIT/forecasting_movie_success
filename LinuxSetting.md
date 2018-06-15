@@ -962,7 +962,7 @@ import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.StringIndexer
 
 // train데이터 
- "'"
+ 
 val df = spark.read.csv("/project/DDDD.csv")
 spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
 
@@ -985,6 +985,8 @@ def func(d: Double):Int = {
 spark.udf.register("viewer_level", (v: Double) => func(v) )
 
 val df4 = df2.select('Title, 'Director, 'Company, 'Month, 'Type, 'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre, 'Grade,'Actor)
+
+"`"
 
 val titleIndexer = new StringIndexer().setInputCol("Title").setOutputCol("TitleCode")
 val df5 = titleIndexer.fit(df4).transform(df4)
@@ -1064,7 +1066,7 @@ val newDF13 = model.setPredictionCol("predic_viewer").transform(newDF12)
 newDF13.cache()
 
 newDF13.select("Title","predic_viewer").show(10,false)
-"'"
+"`"
 +----------------------------------+-------------------+
 |Title                             |predic_viewer      |
 +----------------------------------+-------------------+

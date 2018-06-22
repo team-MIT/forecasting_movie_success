@@ -1,5 +1,5 @@
-### Default chart 
-#### MLlib를 이용한 linear regression 
+### MLlib를 이용하여 Default chart 만들기
+#### Model 만들기
 
 ````scala
 import org.apache.spark.ml.feature.StringIndexer
@@ -12,7 +12,7 @@ import org.apache.spark.ml.feature.StringIndexer
 //1) string 타입을 double 타입으로 cast
 spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
 
-//2) 흥행 한 영화 / 흥행하지 않은 영화를 각각 0, 1로 mapping (흥행기준: 100만 관객)
+//2) 흥행 한 영화 / 흥행하지 않은 영화의 관객 수를 각각 0, 1로 mapping (흥행기준: 100만 관객)
 def func(d: Double):Int = {
       if(d>=1000000)
      0
@@ -57,5 +57,18 @@ println("결정계수: " + model.summary.r2)
 val df6 = model.setPredictionCol("predic_viewer").transform(df5)
 df6.cache()
 df6.select("Title","Viewer_level","predic_viewer").show(10,false)
+
+````
+
+#### 개봉될 영화의 흥행 지수 예측
+
+````scala
+
+val test_df = spark.read.csv("/project/TestInput.csv")
+val test_df2 = test_df.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"),callUDF("toDouble", '_c2).as("Company"),callUDF("toDouble",'_c3).as("Month"),callUDF("toDouble",'_c4).as("Country"),callUDF("toDouble",'_c5).as("Genre"),callUDF("toDouble",'_c6).as("Grade"),callUDF("toDouble",'_c7).as("Actor"),callUDF("toDouble",'_c8).as("Twitter")
+val test_df3 = assembler.transform(test_df2)
+val test_df4 = model.setPredictionCol("predic_viewer").transform(test_df3)
+test_df4.cache()
+test_df4.select("Title","predic_viewer").show(10,false)
 
 ````

@@ -1,7 +1,6 @@
-````javascript
+### Default chart 
+#### MLlib를 이용한 linear regression 
 
-#### MLlib를 이용한 linear regression
-````
 ````scala
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.ml.feature.VectorAssembler
@@ -47,9 +46,16 @@ val df5 = assembler.transform(df4)
 //train data, test data 7:3의 비율로 나누기
 val Array(train,test) = df5.randomSplit(Array(0.7,0.3))
 
+//선형회귀 및 train data fitting
 val lr = new LinearRegression().setMaxIter(5).setRegParam(0.3).setLabelCol("Viewer_level").setFeaturesCol("features")
 val model = lr.fit(train)
 
+//만들어진 모델에 대한 r2값 계산
 println("결정계수: " + model.summary.r2)
+
+//선형회귀로 예상되는 흥행지수와 실제 흥행지수 비교하기
+val df6 = model.setPredictionCol("predic_viewer").transform(df5)
+df6.cache()
+df6.select("Title","Viewer_level","predic_viewer").show(10,false)
 
 ````

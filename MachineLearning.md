@@ -66,7 +66,9 @@ df6.select("Title","Viewer_level","predic_viewer").show(10,false)
 
 val test_df = spark.read.csv("/project/TestInput.csv")
 val test_df2 = test_df.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"),callUDF("toDouble", '_c2).as("Company"),callUDF("toDouble",'_c3).as("Month"),callUDF("toDouble",'_c4).as("Country"),callUDF("toDouble",'_c5).as("Genre"),callUDF("toDouble",'_c6).as("Grade"),callUDF("toDouble",'_c7).as("Actor"),callUDF("toDouble",'_c8).as("Twitter")
+
 val test_df3 = assembler.transform(test_df2)
+
 val test_df4 = model.setPredictionCol("predic_viewer").transform(test_df3)
 test_df4.cache()
 test_df4.select("Title","predic_viewer").show(10,false)

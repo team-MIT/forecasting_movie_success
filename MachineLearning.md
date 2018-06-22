@@ -33,11 +33,29 @@ val df2 = df.select('_c0.as("Title"), callUDF("toDouble", '_c1).as("Director"), 
 //schema 출력
 df2.printSchema()
 
+root
+ |-- Title: string (nullable = true)
+ |-- Director: double (nullable = false)
+ |-- Company: double (nullable = false)
+ |-- Month: double (nullable = false)
+ |-- Country: double (nullable = false)
+ |-- Viewer_level: integer (nullable = true)
+ |-- Genre: double (nullable = false)
+ |-- Grade: double (nullable = false)
+ |-- Actor: double (nullable = false)
+
 //관객수 0,1로 mapping 
 val df3 = df2.select('Title, 'Director,'Company,'Month,'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre,'Grade, 'Actor)
 
 val df4 = df3.limit(1200)
 df4.groupBy("Viewer_level").count().show
+
++------------+-----+                                                            
+|Viewer_level|count|
++------------+-----+
+|           0|  583|
+|           1|  617|
++------------+-----+
 
 //선형회귀에서 쓸 독립변수들을 vector의 성분으로 assemble
 val assembler = new VectorAssembler().setInputCols(Array("Director","Company","Month","Country","Genre","Grade","Actor")).setOutputCol("features")
@@ -53,10 +71,32 @@ val model = lr.fit(train)
 //만들어진 모델에 대한 r2값 계산
 println("결정계수: " + model.summary.r2)
 
+결정계수: 0.5785591456631969
+
+
 //선형회귀로 예상되는 흥행지수와 실제 흥행지수 비교하기
 val df6 = model.setPredictionCol("predic_viewer").transform(df5)
 df6.cache()
 df6.select("Title","Viewer_level","predic_viewer").show(10,false)
+
++---------+------------+--------------------+
+|Title    |Viewer_level|predic_viewer       |
++---------+------------+--------------------+
+|신과함께-죄와 벌|0           |0.034521546438351036|
+|국제시장     |0           |0.03414089455103109 |
+|아바타      |0           |0.040064753310077084|
+|베테랑      |0           |0.032136083036656604|
+|괴물       |0           |0.03217861450312487 |
+|도둑들      |0           |0.032136083036656604|
+|7번방의 선물  |0           |0.0333370593099227  |
+|암살       |0           |0.032136083036656604|
+|왕의 남자    |0           |0.03447901497188255 |
+|택시운전사    |0           |0.0328973868112965  |
++---------+------------+--------------------+
+only showing top 10 rows
+
+
+
 
 ````
 

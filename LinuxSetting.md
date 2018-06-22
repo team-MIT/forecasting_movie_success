@@ -961,125 +961,42 @@ import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.StringIndexer
 
-// train데이터 
- 
-val df = spark.read.csv("/project/DDDD.csv")
+//필요한 함수 등록
+//1) string 타입을 double 타입으로 cast
 spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
 
-val df2 = df.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"), '_c2.as("Company"), '_c3.as("Month"), '_c4.as("Type"), '_c5.as("Country"), callUDF("toDouble",'_c6).as("Viewer"), '_c7.as("Genre"), callUDF("toDouble",'_c8).as("Grade"), '_c9.as("Actor"))
-
-
-df2.printSchema()
-
+//2) 흥행 한 영화 / 흥행하지 않은 영화를 각각 0, 1로 mapping (흥행기준: 100만 관객)
 def func(d: Double):Int = {
-      if (d >= 2095375)
+      if(d>=1000000)
      0
-      else if (d >= 1000000)
-     1
      else
-     2
+     1
      }
-
-
-
 spark.udf.register("viewer_level", (v: Double) => func(v) )
 
-val df4 = df2.select('Title, 'Director, 'Company, 'Month, 'Type, 'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre, 'Grade,'Actor)
 
-"`"
-
-val titleIndexer = new StringIndexer().setInputCol("Title").setOutputCol("TitleCode")
-val df5 = titleIndexer.fit(df4).transform(df4)
-val directorIndexer = new StringIndexer().setInputCol("Director").setOutputCol("DirectorCode")
-val df6 = directorIndexer.fit(df5).transform(df5)
-val companyIndexer = new StringIndexer().setInputCol("Company").setOutputCol("CompanyCode")
-val df7 = companyIndexer.fit(df6).transform(df6)
-val monthIndexer = new StringIndexer().setInputCol("Month").setOutputCol("MonthCode")
-val df8 = monthIndexer.fit(df7).transform(df7)
-val typeIndexer = new StringIndexer().setInputCol("Type").setOutputCol("TypeCode")
-val df9 = typeIndexer.fit(df8).transform(df8)
-val countyIndexer = new StringIndexer().setInputCol("Country").setOutputCol("CountryCode")
-val df10 = countyIndexer.fit(df9).transform(df9)
-val viewerIndexer = new StringIndexer().setInputCol("Viewer_level").setOutputCol("ViewerCode")
-val df11 = viewerIndexer.fit(df10).transform(df10)
-val genreIndexer = new StringIndexer().setInputCol("Genre").setOutputCol("GenreCode")
-val df12 = genreIndexer.fit(df11).transform(df11)
-val gradeIndexer = new StringIndexer().setInputCol("Grade").setOutputCol("GradeCode")
-val df13 = gradeIndexer.fit(df12).transform(df12)
-val actorIndexer = new StringIndexer().setInputCol("Actor").setOutputCol("ActorCode")
-val df14 = actorIndexer.fit(df13).transform(df13)
-
-val assembler = new VectorAssembler().setInputCols(Array("DirectorCode","MonthCode","CountryCode","GenreCode","GradeCode","ActorCode")).	setOutputCol("features")
-val df15 = assembler.transform(df14)
-
-val Array(train,test) = df15.randomSplit(Array(0.7,0.3))
-
-val lr = new LinearRegression().setMaxIter(5).setRegParam(0.3).setLabelCol("Viewer_level").setFeaturesCol("features")
-val model = lr.fit(train)
-
-println("결정계수: " + model.summary.r2)
-결정계수: 0.8421501147069409
-
-val df16 = model.setPredictionCol("predic_viewer").transform(test)
-df16.cache()
-
-df16.select("Viewer_level","predic_viewer").show(5,false)
-
-// test데이터 처리
-
-val newDF = spark.read.csv("/project/testfile.csv")
-
-spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-6.]","").toDouble})
-
-val newDF2 = newDF.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"),
-'_c2.as("Month"),'_c3.as("Country"), '_c4.as("Genre"), callUDF("toDouble",'_c5).as("Grade"), callUDF("toDouble",'_c6).as("Actor"))
+// csv 형태의 train data를 dataframe으로 가져와 column명 지정 및 double type으로 cast
+ 
+val df = spark.read.csv("/project/TrainInput.csv")
+val df2 = df.select('_c0.as("Title"), callUDF("toDouble", '_c1).as("Director"), callUDF("toDouble",'_c2).as("Company"),
+     callUDF("toDouble",'_c3).as("Month"), callUDF("toDouble", '_c4).as("Country"), callUDF("toDouble", '_c5).as("Viewer"), 
+     callUDF("toDouble", '_c6).as("Genre"), callUDF("toDouble", '_c7).as("Grade"), callUDF("toDouble",'_c8).as("Actor"))
 
 
-val newDF4 = newDF2.select('Title, 'Director, 'Month, 'Country, 'Genre, 'Grade,'Actor)
+//schema 출력
+df2.printSchema()
 
-val titleIndexer1 = new StringIndexer().setInputCol("Title").setOutputCol("TitleCode")
-val newDF5 = titleIndexer1.fit(newDF4).transform(newDF4)
+//관객수 0,1로 mapping 
+val df3 = df2.select('Title, 'Director,'Company,'Month,'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre,'Grade, 'Actor)
 
-val directorIndexer1 = new StringIndexer().setInputCol("Director").setOutputCol("DirectorCode")
-val newDF6 = directorIndexer1.fit(newDF5).transform(newDF5)
+val df4 = df3.limit(1200)
+df4.groupBy("Viewer_level").count().show
 
-val monthIndexer1 = new StringIndexer().setInputCol("Month").setOutputCol("MonthCode")
-val newDF7 = monthIndexer1.fit(newDF6).transform(newDF6)
+//선형회귀에서 쓸 독립변수들을 vector의 성분으로 assemble
+val assembler = new VectorAssembler().setInputCols(Array("Director","Company","Month","Country","Genre","Grade","Actor")).setOutputCol("features")
+val df5 = assembler.transform(df4)
 
-val countryIndexer1 = new StringIndexer().setInputCol("Country").setOutputCol("CountryCode")
-val newDF8 = countryIndexer1.fit(newDF7).transform(newDF7)
-
-val genreIndexer1 = new StringIndexer().setInputCol("Genre").setOutputCol("GenreCode")
-val newDF9 = genreIndexer1.fit(newDF8).transform(newDF8)
-
-val gradeIndexer1 = new StringIndexer().setInputCol("Grade").setOutputCol("GradeCode")
-val newDF10 = gradeIndexer1.fit(newDF9).transform(newDF9)
-
-val actorIndexer1 = new StringIndexer().setInputCol("Actor").setOutputCol("ActorCode")
-val newDF11 = actorIndexer1.fit(newDF10).transform(newDF10)
+//train data, test data 7:3의 비율로 나누기
+val Array(train,test) = df5.randomSplit(Array(0.7,0.3))
 
 
-
-val newDF12 = assembler.transform(newDF11)
-
-val newDF13 = model.setPredictionCol("predic_viewer").transform(newDF12)
-newDF13.cache()
-
-newDF13.select("Title","predic_viewer").show(10,false)
-"`"
-+----------------------------------+-------------------+
-|Title                             |predic_viewer      |
-+----------------------------------+-------------------+
-|쥬라기 월드:폴른 킹덤                      |0.2537014797679069 |
-|탐정: 리턴즈                           |1.3839193699624368 |
-|오션스8                              |0.8257088495939007 |
-|독전                                |1.962176063243183  |
-|아이 필 프리티                          |1.3984122095641212 |
-|극장판 포켓몬스터DP - 디아루가 VS  펄기아 VS 다크라이|1.3974931838179474 |
-|유전                                |1.3948933716299006 |
-|토니스토리2: 고철왕국의 친구들                 |0.8239779783626395 |
-|데드풀 2                             |0.25045608944866027|
-|버닝                                |1.3746997325976325 |
-+----------------------------------+-------------------+
-
-````

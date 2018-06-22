@@ -1,6 +1,6 @@
 #### MLlib를 이용한 linear regression
 
-````javascript
+````scala
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.linalg.Vectors
@@ -44,5 +44,10 @@ val df5 = assembler.transform(df4)
 
 //train data, test data 7:3의 비율로 나누기
 val Array(train,test) = df5.randomSplit(Array(0.7,0.3))
+
+val lr = new LinearRegression().setMaxIter(5).setRegParam(0.3).setLabelCol("Viewer_level").setFeaturesCol("features")
+val model = lr.fit(train)
+
+println("결정계수: " + model.summary.r2)
 
 ````

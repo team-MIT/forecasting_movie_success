@@ -1,7 +1,6 @@
 ### MLlib를 이용하여 Default chart 만들기
 #### Model 만들기
 
-````scala
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.linalg.Vectors
@@ -98,11 +97,7 @@ only showing top 10 rows
 
 
 
-````
-
 #### 개봉될 영화의 흥행 지수 예측
-
-````scala
 
 val test_df = spark.read.csv("/project/TestInput.csv")
 val test_df2 = test_df.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"),callUDF("toDouble", '_c2).as("Company"),callUDF("toDouble",'_c3).as("Month"),callUDF("toDouble",'_c4).as("Country"),callUDF("toDouble",'_c5).as("Genre"),callUDF("toDouble",'_c6).as("Grade"),callUDF("toDouble",'_c7).as("Actor"),callUDF("toDouble",'_c8).as("Twitter")
@@ -113,4 +108,3 @@ val test_df4 = model.setPredictionCol("predic_viewer").transform(test_df3)
 test_df4.cache()
 test_df4.select("Title","predic_viewer").show(10,false)
 
-````

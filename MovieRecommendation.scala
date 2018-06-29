@@ -1,4 +1,4 @@
-# ALS를 이용하여 사용자에게 영화 추천
+//ALS를 이용하여 사용자에게 영화 추천
 
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._

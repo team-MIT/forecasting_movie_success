@@ -12,10 +12,10 @@ val args  = sc.getConf.get("spark.driver.args").split("\\s+")
 val userId = args(0).toInt
 
 val connectionProperties = new Properties()
-connectionProperties.put("user", "root")
-connectionProperties.put("password", "123456")
-connectionProperties.put("user", "root")
-connectionProperties.put("password", "123456")
+connectionProperties.put("user", "USER")
+connectionProperties.put("password", "PASSWORD")
+connectionProperties.put("user", "USER")
+connectionProperties.put("password", "PASSWORD")
 
 val jdbcUrl = "jdbc:mysql://slave01:3306/hadoop"
 

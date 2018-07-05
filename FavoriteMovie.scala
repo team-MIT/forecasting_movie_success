@@ -9,10 +9,10 @@ val userId = args(0)
 
 //jdbc연결
 val connectionProperties = new Properties()
-connectionProperties.put("user", "root")
-connectionProperties.put("password", "123456")
-connectionProperties.put("user", "root")
-connectionProperties.put("password", "123456")
+connectionProperties.put("user", "USERID")
+connectionProperties.put("password", "PASSWORD")
+connectionProperties.put("user", "USERID")
+connectionProperties.put("password", "PASSWORD")
 
 val jdbcUrl = "jdbc:mysql://slave01:3306/hadoop"
 

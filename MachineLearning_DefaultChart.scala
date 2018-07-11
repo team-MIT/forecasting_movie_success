@@ -17,6 +17,7 @@ connectionProperties.put("password", "PASSWORD")
 
 val jdbcUrl = "jdbc:mysql://slave01:3306/hadoop"
 
+//관객수를 0 과 1과 맵핑하는 함수
 def func(d: Int):Int = {
       if(d>=1000000)
          0
@@ -26,7 +27,7 @@ def func(d: Int):Int = {
 
 spark.udf.register("viewer_level", (v: Int) => func(v) )
 
-
+//머신러닝으로 예측된 흥행지수를 정규화
 def scorefunc(d: Double):Double = {
       (2-d)*4
 }

@@ -1,110 +1,80 @@
-### MLlib를 이용하여 Default chart 만들기
-#### Model 만들기
-
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkConf
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.StringIndexer
+import spark.implicits._
+import java.util.Properties
+import org.apache.spark.sql.SaveMode
 
-//필요한 함수 등록
-//1) string 타입을 double 타입으로 cast
-spark.udf.register("toDouble", (v:String) => {v.replaceAll("[^0-9.]","").toDouble})
+val connectionProperties = new Properties()
+connectionProperties.put("user", "USER")
+connectionProperties.put("password", "PASSWORD")
+connectionProperties.put("user", "USER")
+connectionProperties.put("password", "PASSWORD")
 
-//2) 흥행 한 영화 / 흥행하지 않은 영화의 관객 수를 각각 0, 1로 mapping (흥행기준: 100만 관객)
-def func(d: Double):Int = {
+val jdbcUrl = "jdbc:mysql://slave01:3306/hadoop"
+
+def func(d: Int):Int = {
       if(d>=1000000)
-     0
-     else
-     1
-     }
-spark.udf.register("viewer_level", (v: Double) => func(v) )
+         0
+      else
+	 1
+      }
+
+spark.udf.register("viewer_level", (v: Int) => func(v) )
 
 
-// csv 형태의 train data를 dataframe으로 가져와 column명 지정 및 double type으로 cast
- 
-val df = spark.read.csv("/project/TrainInput.csv")
-val df2 = df.select('_c0.as("Title"), callUDF("toDouble", '_c1).as("Director"), callUDF("toDouble",'_c2).as("Company"),
-     callUDF("toDouble",'_c3).as("Month"), callUDF("toDouble", '_c4).as("Country"), callUDF("toDouble", '_c5).as("Viewer"), 
-     callUDF("toDouble", '_c6).as("Genre"), callUDF("toDouble", '_c7).as("Grade"), callUDF("toDouble",'_c8).as("Actor"))
+def scorefunc(d: Double):Double = {
+      (2-d)*4
+}
+spark.udf.register("scorefunc", (v: Double) => scorefunc(v) )
 
 
-//schema 출력
-df2.printSchema()
+val df = spark.read.format("csv").option("header","true").option("inferSchema","true").load("/project/TrainInput.csv")
+val df3 = df.select('Title, 'Director,'Company,'Month,'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre,'Grade, 'Actor)
 
-root
- |-- Title: string (nullable = true)
- |-- Director: double (nullable = false)
- |-- Company: double (nullable = false)
- |-- Month: double (nullable = false)
- |-- Country: double (nullable = false)
- |-- Viewer_level: integer (nullable = true)
- |-- Genre: double (nullable = false)
- |-- Grade: double (nullable = false)
- |-- Actor: double (nullable = false)
 
-//관객수 0,1로 mapping 
-val df3 = df2.select('Title, 'Director,'Company,'Month,'Country, callUDF("viewer_level", 'Viewer).as('Viewer_level), 'Genre,'Grade, 'Actor)
+val assembler = new VectorAssembler().setInputCols(Array("Director","Company","Month","Country","Genre","Grade","Actor")).setOutputCol("features")
 
 val df4 = df3.limit(1200)
 df4.groupBy("Viewer_level").count().show
-
-+------------+-----+                                                            
-|Viewer_level|count|
-+------------+-----+
-|           0|  583|
-|           1|  617|
-+------------+-----+
-
-//선형회귀에서 쓸 독립변수들을 vector의 성분으로 assemble
-val assembler = new VectorAssembler().setInputCols(Array("Director","Company","Month","Country","Genre","Grade","Actor")).setOutputCol("features")
 val df5 = assembler.transform(df4)
 
-//train data, test data 7:3의 비율로 나누기
 val Array(train,test) = df5.randomSplit(Array(0.7,0.3))
 
-//선형회귀 및 train data fitting
 val lr = new LinearRegression().setMaxIter(5).setRegParam(0.3).setLabelCol("Viewer_level").setFeaturesCol("features")
 val model = lr.fit(train)
-
-//만들어진 모델에 대한 r2값 계산
 println("결정계수: " + model.summary.r2)
 
-결정계수: 0.5785591456631969
 
-
-//선형회귀로 예상되는 흥행지수와 실제 흥행지수 비교하기
 val df6 = model.setPredictionCol("predic_viewer").transform(df5)
 df6.cache()
 df6.select("Title","Viewer_level","predic_viewer").show(10,false)
 
-+---------+------------+--------------------+
-|Title    |Viewer_level|predic_viewer       |
-+---------+------------+--------------------+
-|신과함께-죄와 벌|0           |0.034521546438351036|
-|국제시장     |0           |0.03414089455103109 |
-|아바타      |0           |0.040064753310077084|
-|베테랑      |0           |0.032136083036656604|
-|괴물       |0           |0.03217861450312487 |
-|도둑들      |0           |0.032136083036656604|
-|7번방의 선물  |0           |0.0333370593099227  |
-|암살       |0           |0.032136083036656604|
-|왕의 남자    |0           |0.03447901497188255 |
-|택시운전사    |0           |0.0328973868112965  |
-+---------+------------+--------------------+
-only showing top 10 rows
+//val test_df = spark.read.format("csv").option("header","false").option("inferSchema","true").load("/project/TestInput_180709.csv")
+val test_df = spark.read.format("csv").option("header","false").load("/project/TestInput_180709.csv")
 
+val test_df2 = test_df.select('_c0.as("Title"),'_c1.as("Director").cast("int"), '_c2.as("Company").cast("int"),'_c3.as("Month").cast("int"),'_c4.as("Country").cast("int"),'_c5.as("Genre").cast("int"),'_c6.as("Grade").cast("int"),'_c7.as("Actor").cast("double"),'_c8.as("r_date").cast("date"),'_c9.as("twitter").cast("double")).filter("r_date is not null")
 
-
-
-#### 개봉될 영화의 흥행 지수 예측
-
-val test_df = spark.read.csv("/project/TestInput.csv")
-val test_df2 = test_df.select('_c0.as("Title"),callUDF("toDouble",'_c1).as("Director"),callUDF("toDouble", '_c2).as("Company"),callUDF("toDouble",'_c3).as("Month"),callUDF("toDouble",'_c4).as("Country"),callUDF("toDouble",'_c5).as("Genre"),callUDF("toDouble",'_c6).as("Grade"),callUDF("toDouble",'_c7).as("Actor"),callUDF("toDouble",'_c8).as("Twitter")
+test_df2.printSchema()
 
 val test_df3 = assembler.transform(test_df2)
-
 val test_df4 = model.setPredictionCol("predic_viewer").transform(test_df3)
 test_df4.cache()
-test_df4.select("Title","predic_viewer").show(10,false)
+val test_df5 = test_df4.select($"Title".as("title"),$"predic_viewer", $"twitter",$"r_date").sort($"predic_viewer".asc)
+test_df5.show(100)
+
+val test_df6 = test_df5.select($"title", callUDF("scorefunc", 'predic_viewer).as("predict"), $"twitter", $"r_date")
+val test_df7 = test_df6.select($"title", $"predict" + $"twitter", $"r_date")
+val test_df8 = test_df7.select($"title", $"(predict + twitter)".as("prediction"), $"r_date")
+test_df6.select($"title", $"predict" + $"twitter", $"r_date").sort($"(predict + twitter)".desc).show(100)
+
+test_df8.write.mode(SaveMode.Overwrite).jdbc(jdbcUrl, "hadoop.defaultChart", connectionProperties)
+
+
+System.exit(1)
+
 

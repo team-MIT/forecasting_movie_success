@@ -27,7 +27,7 @@ def func(d: Int):Int = {
 
 spark.udf.register("viewer_level", (v: Int) => func(v) )
 
-//머신러닝으로 예측된 흥행지수를 정규화
+//머신러닝으로 예측된 흥행지수를 정규화하는 함수
 def scorefunc(d: Double):Double = {
       (2-d)*4
 }

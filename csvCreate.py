@@ -1,3 +1,5 @@
+# 영화 DB에 필요한 칼럼들을 JOIN시켜 csv파일로 만들기 위한 
+
 import os
 import io
 import re

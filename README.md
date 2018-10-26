@@ -12,7 +12,7 @@
 - 개발 환경 : centos6, ubuntu 16:04, windows 10
 - 개발 도구 : eclipse, sts, docker, vs code
 - 개발 언어 : java, python, scala, html5, css3, java script
-- 사용 기술 : Hadoop, spark, mysql, vue.js, spring boot, mybatis, crawling(bs4, selenium, phantomJS, tweepy), 형태소분석 (KoNLpy, nltk)
+- 사용 기술 : Hadoop, spark, mysql, vue.js, spring, mybatis, crawling(bs4, selenium, phantomJS, tweepy), 형태소분석 (KoNLpy, nltk)
 
 ### 4) 개발 일정 
 
@@ -34,6 +34,7 @@
 이를 위해, 왓챠(https://watcha.net)에서 약 150명의 개인별 영화 평점데이터를 크롤링하였고, 수집된 데이터를 Spark mlLib에서 제공하는 ALS(Alternating Least Sqares)모듈을 사용해 기능을 구현하였다.
 또한, 개인의 평점 데이터를 통계 분석하여 선호하는 감독과 영화배우, 장르, 국가를 차트로 보여주고, 선호하는 영화에 대한 해쉬태그를 워드 클라우드(Word Cloud)로 시각화하였다.
 
+### 5) 시각화
 
 
 ## 3. 결론

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.example.demo.mapper.movieMapper">
+ 
+    <select id="movielistall" resultType="com.example.demo.vo.movieVO">
+        SELECT * FROM movieInfo LIMIT 10
+    </select>
+    
+    <select id="detailListall" resultType="com.example.demo.vo.movieVO">
+        SELECT * FROM movieInfo ORDER BY title asc
+    </select>
+    
+    <select id="movieinsert" >
+     INSERT INTO movieInfo (
+          TITLE,
+          DIRECTOR,
+          COMPANY,
+          MONTH,
+          TYPE,
+          COUNTRY,
+          SCREEN,
+          VIEWER,
+          GENRE,
+          GRADE
+        ) VALUES (
+          #{TITLE},
+          #{DIRECTOR},
+          #{COMPANY},
+          #{MONTH},
+          #{TYPE},
+          #{COUNTRY},
+          #{SCREEN},
+          #{VIEWER},
+          #{GENRE},
+          #{GRADE}
+        )
+    </select>
+    
+    <!-- view  -->
+       <select id="read" resultType="com.example.demo.vo.movieVO">
+        SELECT * FROM movieInfo
+        WHERE TITLE = #{TITLE}
+       </select>
+    
+    <!--    update   -->
+    <update id="movieupdate" >
+      UPDATE movieInfo SET      
+      DIRECTOR = #{DIRECTOR},
+      COMPANY = #{COMPANY}
+      WHERE TITLE = #{TITLE}
+    </update>
+                    
+    <!--    delete   -->
+    <delete id="moviedelete">
+      DELETE FROM movieInfo
+      WHERE title = #{TITLE}
+    </delete>
+        
+    <!-- movie user table -->
+    <!-- create table Test1(userId varchar(100) , movie int, rating double -->
+    
+<!-- top 10 -->
+    
+<!--      <select id="toplist" resultType="com.example.demo.vo.topVO"> -->
+<!--         SELECT * FROM recommendation ORDER BY rating DESC; -->
+<!--     </select> -->    
+    
+    <select id="toplist" resultType="com.example.demo.vo.topVO">
+                
+<!--                  SELECT * FROM recommendation r WHERE r.title IN(SELECT title FROM recommendation r WHERE r.user IN(SELECT user FROM ratingsFile)) -->
+<!--                  SELECT * FROM recommendation r WHERE r.user IN(SELECT user FROM ratingsFile) ORDER BY r.rating DESC -->
+
+<!--                   SELECT * FROM recommendation r WHERE r.title NOT IN(SELECT r1.title FROM ratingsFile r1, recommendation r2 WHERE r1.user = r2.user) ORDER BY r.rating DESC  -->
+<!--                   SELECT * FROM recommendation r WHERE r.title NOT IN(SELECT r1.title FROM ratings_new r1, recommendation r2 WHERE r1.user = r2.user) ORDER BY r.rating DESC limit 10 -->
+
+<!--           SELECT * FROM recommendation r WHERE r.title NOT IN(SELECT r1.title FROM ratings_new r1 WHERE r1.user LIKE #{id}) ORDER BY r.rating DESC LIMIT 10 -->
+<!--           SELECT * FROM rcmd -->
+          
+          SELECT * FROM rcmd r WHERE r.title NOT IN(SELECT r1.title FROM ratings r1 WHERE r1.id LIKE #{id}) and r.id = #{id} ORDER BY r.rating DESC LIMIT 20
+          
+    </select>       
+    
+     <select id="topsparkno" resultType="int">
+        SELECT no FROM member WHERE id = #{id}
+    </select>
+    
+        
+    <select id="MovieDetail" resultType="com.example.demo.vo.topposter2VO">
+        SELECT title,director,genre,actor1,country,story,r_date,runningtime,code FROM MovieList2
+    </select>
+    
+    <select id="MovieList" resultType="com.example.demo.vo.topposter2VO">
+        SELECT title FROM MovieList
+    </select>
+    
+    <select id="topConfirm" parameterType="String" resultType="int">
+    	 SELECT count(*) FROM MovieList2 r WHERE r.title IN(SELECT r1.title FROM ratings r1 WHERE id LIKE #{id}) 
+    </select>
+    
+        
+    <!-- top 10 end  -->
+    
+    
+    <!-- favorite delete -->
+    
+    <delete id="favoritegenredelete">
+      DELETE FROM favoriteGenre
+      WHERE id = #{id}
+    </delete>
+    
+    <delete id="favoriteactordelete">
+      DELETE FROM favoriteActor
+      WHERE id = #{id}
+    </delete>
+    
+    <delete id="favoritedirectordelete">
+      DELETE FROM favoriteDirector
+      WHERE id = #{id}
+    </delete>
+    
+    <delete id="favoritecountrydelete">
+      DELETE FROM favoriteCountry
+      WHERE id = #{id}
+    </delete>
+    
+    <!-- /////////////// -->
+    
+    
+    <!-- favorite list all -->
+    <select id="favoritegenre" resultType="com.example.demo.vo.favoritegenreVO">
+          SELECT * FROM favoriteGenre  WHERE id = #{id} ORDER BY avg DESC LIMIT 5
+    </select>
+    
+    
+    <select id="favoriteactor" resultType="com.example.demo.vo.favoriteactorVO">
+          SELECT * FROM favoriteActor  WHERE id = #{id} ORDER BY avg DESC LIMIT 5
+    </select>
+    
+    
+    <select id="favoritedirector" resultType="com.example.demo.vo.favoritedirectorVO">
+          SELECT * FROM favoriteDirector  WHERE id = #{id} ORDER BY avg DESC LIMIT 5
+    </select>
+    
+    
+    <select id="favoritecountry" resultType="com.example.demo.vo.favoritecountryVO">
+          SELECT * FROM favoriteCountry  WHERE id = #{id} ORDER BY count DESC LIMIT 5
+    </select>
+    
+    
+    
+    <!-- 평가더하기 중복제거 쿼리  -->
+    <select id="duplicateScore" parameterType="String" resultType="Integer">
+    	SELECT movie FROM MovieList r WHERE r.title NOT IN(SELECT r1.title FROM ratings r1 WHERE id LIKE #{id}) 
+    </select>    
+    <!-- ////////////// -->
+        <!-- 평가더하기 상세보기  -->
+    <select id="scorePlus" parameterType="String" resultType="com.example.demo.vo.movieDetailVO">
+    	SELECT * FROM MovieList2 r WHERE r.title NOT IN(SELECT r1.title FROM ratings r1 WHERE id LIKE #{id}) ORDER BY movie asc
+    </select>  
+    <!--  SELECT * FROM MovieList r WHERE r.title NOT IN(SELECT r1.title FROM ratings r1 WHERE id LIKE #{id}) -->
+    <!--  rcmd delete  -->
+    <delete id="rcmddelete">
+      DELETE FROM rcmd 
+      WHERE id = #{id}
+    </delete>
+    
+    
+    <!--  star Score -->
+    <insert id="starScore" parameterType="com.example.demo.vo.ScoreVO">
+    	INSERT INTO ratings VALUES(#{id},#{title},#{rating}) ON DUPLICATE KEY UPDATE rating=VALUES(rating) 
+    </insert>
+    
+        <!-- 흥행예정작을 얻어온다. -->
+    <select id="defaultMovie" parameterType="String" resultType="com.example.demo.vo.defaultVO">
+		SELECT * FROM defaultChart WHERE (r_date > curdate() - 30) ORDER BY prediction desc LIMIT 10
+    </select>
+    <!--  -->
+    
+</mapper> 
